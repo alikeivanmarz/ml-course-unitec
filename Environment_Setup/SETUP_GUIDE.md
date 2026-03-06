@@ -136,7 +136,7 @@ code .
 3. Choose the mlcourse environment: `~/miniconda3/envs/mlcourse/bin/python`
 
 **Test Jupyter Integration:**
-1. Open `Course_Sessions/Week_1/Session_1_Introduction.ipynb`
+1. Open `Course_Sessions/Week_1/Week_1_Session_1.ipynb`
 2. VSCode should automatically detect it as a Jupyter notebook
 3. **Select the correct kernel**:
    - **Method 1**: Click the kernel name in the top-right corner of the notebook
@@ -166,18 +166,6 @@ conda install -c conda-forge jupyter jupyterlab ipykernel -y
 
 # Install deep learning and additional tools
 pip install tensorflow opencv-python nltk pillow
-```
-
-### Step 2: Alternative Package Installation
-
-If you prefer using pip only:
-
-```bash
-# Activate environment
-conda activate mlcourse
-
-# Install all packages
-pip install -r requirements.txt
 ```
 
 ## Starting VSCode with Jupyter
