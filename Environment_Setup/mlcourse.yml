@@ -1,0 +1,106 @@
+name: mlcourse
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+  - numpy<2.0
+  - pandas
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - notebook
+  - ipykernel
+  - ipywidgets
+  - pip
+
+  - pip:
+    # Advanced ML Libraries
+    - xgboost
+    - lightgbm
+    - catboost
+    - tensorflow==2.16.1
+    - keras
+    - torch
+    - torchvision
+    - torchaudio
+    - transformers
+    - datasets
+    - nltk
+    - keras-tuner
+    - tensorboard
+    - optuna
+    - scikit-image
+    - scipy
+
+    # Generative AI & Diffusion Models (Week 4)
+    - diffusers
+    - accelerate
+    - safetensors
+    - compel
+
+    # Image Super-Resolution Libraries
+    - realesrgan
+    - basicsr
+    - gfpgan
+    - facexlib
+    
+    # Model Interpretation & Explainability
+    - shap
+    - lime
+    
+    # Computer Vision & Image Processing
+    - opencv-python
+    - pillow
+    - ultralytics
+    - yolov5
+    
+    # Data Visualization
+    - plotly
+    - wordcloud
+    
+    # Time Series & Statistical Analysis
+    - statsmodels
+    
+    # Model Evaluation & Data Processing
+    - imbalanced-learn
+    - openpyxl
+    - requests
+    - joblib
+    - nbformat
+    
+    # LLM & API Connections
+    - openai
+    - langchain
+    - langchain-openai
+    - anthropic
+    - tiktoken
+    - sentence-transformers
+    
+    # Additional LLM Tools
+    - llama-index
+    - chromadb
+    - faiss-cpu
+    - huggingface-hub
+
+    # Audio Generation (Week 4)
+    - soundfile
+    - scipy
+    - librosa
+    
+    # MLOps & Deployment
+    - streamlit
+    - gradio
+    - fastapi
+    - uvicorn
+    # Database Connections
+    - sqlalchemy
+    - kaggle
+    - yfinance
+    - tensorflow-datasets
+
+    # UCI ML Repository
+    - ucimlrepo
+    
