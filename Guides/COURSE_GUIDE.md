@@ -81,18 +81,16 @@ By the end of this course, you will be able to:
 Machine_Learning_Course_Unitec/
 ├── Environment_Setup/          # Environment configuration
 │   ├── SETUP_GUIDE.md         # Detailed setup instructions
-│   ├── mlcourse.yml          # Conda environment file
-│   └── requirements.txt      # Pip requirements
+│   └── mlcourse.yml           # Conda environment file
 ├── Course_Sessions/           # Weekly session notebooks
 │   ├── Week_1/
 │   ├── Week_2/
 │   ├── Week_3/
 │   └── Week_4/
-│       └── Final_Project_Presentations/
-├── Assignments/               # Assignment templates and submissions
-│   ├── Assignment_1
-│   ├── Assignment_2
-│   └── Assignment_3
+├── Assignments/               # Assignment templates
+│   ├── Assignment_1/
+│   ├── Assignment_2/
+│   └── Assignment_3/
 ├── Datasets/                  # Course datasets
 └── Guides/                    # Course documentation
     ├── COURSE_GUIDE.md        # This file

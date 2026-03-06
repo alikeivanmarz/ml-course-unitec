@@ -1,6 +1,7 @@
 name: mlcourse
 channels:
   - conda-forge
+  - pytorch
   - defaults
 
 dependencies:
@@ -21,7 +22,7 @@ dependencies:
     - xgboost
     - lightgbm
     - catboost
-    - tensorflow==2.16.1
+    - tensorflow>=2.16.1
     - keras
     - torch
     - torchvision
@@ -46,31 +47,31 @@ dependencies:
     - basicsr
     - gfpgan
     - facexlib
-    
+
     # Model Interpretation & Explainability
     - shap
     - lime
-    
+
     # Computer Vision & Image Processing
     - opencv-python
     - pillow
     - ultralytics
     - yolov5
-    
+
     # Data Visualization
     - plotly
     - wordcloud
-    
+
     # Time Series & Statistical Analysis
     - statsmodels
-    
+
     # Model Evaluation & Data Processing
     - imbalanced-learn
     - openpyxl
     - requests
     - joblib
     - nbformat
-    
+
     # LLM & API Connections
     - openai
     - langchain
@@ -78,7 +79,7 @@ dependencies:
     - anthropic
     - tiktoken
     - sentence-transformers
-    
+
     # Additional LLM Tools
     - llama-index
     - chromadb
@@ -87,14 +88,14 @@ dependencies:
 
     # Audio Generation (Week 4)
     - soundfile
-    - scipy
     - librosa
-    
+
     # MLOps & Deployment
     - streamlit
     - gradio
     - fastapi
     - uvicorn
+
     # Database Connections
     - sqlalchemy
     - kaggle
@@ -103,4 +104,3 @@ dependencies:
 
     # UCI ML Repository
     - ucimlrepo
-    
