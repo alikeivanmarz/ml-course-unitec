@@ -47,11 +47,21 @@ Machine_Learning_Course_Unitec/
 │   ├── Assignment_2/
 │   └── Assignment_3/
 ├── Datasets/                  # Course datasets
-└── Guides/                    # Course documentation
-    ├── COURSE_GUIDE.md        # Course overview and assessment
-    ├── WORKFLOW_GUIDE.md      # Daily workflow instructions
-    ├── GITHUB_SETUP_GUIDE.md  # Git setup and usage
-    └── QUICK_SETUP_GUIDE.md   # Quick start instructions
+└── Guides/                    # Course documentation (numbered in recommended reading order)
+    ├── 01_COURSE_GUIDE.md             # Course overview and assessment
+    ├── 02_QUICK_SETUP_GUIDE.md        # Quick start instructions
+    ├── 03_GITHUB_SETUP_GUIDE.md       # Git setup and usage
+    ├── 04_GIT_PULL_GUIDE.md           # Pulling latest course updates
+    ├── 05_WORKFLOW_GUIDE.md           # Daily workflow instructions
+    ├── 06_PYTHON_ESSENTIALS_FOR_ML.md # Python, NumPy, Pandas, plotting
+    ├── 07_DATA_PREPROCESSING_GUIDE.md # Cleaning, scaling, encoding, pipelines
+    ├── 08_ML_PIPELINE_GUIDE.md        # End-to-end ML pipeline examples
+    ├── 09_MODEL_EVALUATION_GUIDE.md   # Metrics, CV, hyperparameter tuning
+    ├── 10_ML_DEBUGGING_GUIDE.md       # Overfitting, leakage, NaN, shapes
+    ├── 11_DEEP_LEARNING_KERAS_GUIDE.md # Neural networks with Keras
+    ├── 12_COMPUTER_VISION_GUIDE.md    # CNNs, transfer learning, YOLO
+    ├── 13_NLP_TRANSFORMERS_GUIDE.md   # Text processing and HuggingFace
+    └── 14_GENERATIVE_AI_GUIDE.md      # GANs, LLMs, diffusion models
 ```
 
 ## Course Structure
@@ -86,10 +96,20 @@ code .                        # Open in VSCode
 | Guide | Description |
 |-------|-------------|
 | [Setup Guide](Environment_Setup/SETUP_GUIDE.md) | Detailed environment setup |
-| [Quick Setup](Guides/QUICK_SETUP_GUIDE.md) | Fast setup instructions |
-| [Course Guide](Guides/COURSE_GUIDE.md) | Course overview and assessment |
-| [GitHub Guide](Guides/GITHUB_SETUP_GUIDE.md) | Git setup and usage |
-| [Workflow Guide](Guides/WORKFLOW_GUIDE.md) | Daily workflow |
+| [01 Course Guide](Guides/01_COURSE_GUIDE.md) | Course overview and assessment — start here |
+| [02 Quick Setup](Guides/02_QUICK_SETUP_GUIDE.md) | Fast setup instructions |
+| [03 GitHub Guide](Guides/03_GITHUB_SETUP_GUIDE.md) | Git setup and usage |
+| [04 Git Pull Guide](Guides/04_GIT_PULL_GUIDE.md) | Pulling latest updates each session |
+| [05 Workflow Guide](Guides/05_WORKFLOW_GUIDE.md) | Daily workflow |
+| [06 Python Essentials](Guides/06_PYTHON_ESSENTIALS_FOR_ML.md) | Python, NumPy, Pandas, plotting |
+| [07 Data Preprocessing](Guides/07_DATA_PREPROCESSING_GUIDE.md) | Cleaning, scaling, encoding, pipelines |
+| [08 ML Pipeline](Guides/08_ML_PIPELINE_GUIDE.md) | End-to-end pipeline examples |
+| [09 Model Evaluation](Guides/09_MODEL_EVALUATION_GUIDE.md) | Metrics, CV, hyperparameter tuning |
+| [10 ML Debugging](Guides/10_ML_DEBUGGING_GUIDE.md) | Overfitting, leakage, NaN, shapes |
+| [11 Deep Learning with Keras](Guides/11_DEEP_LEARNING_KERAS_GUIDE.md) | Neural networks with Keras |
+| [12 Computer Vision](Guides/12_COMPUTER_VISION_GUIDE.md) | CNNs, transfer learning, YOLO |
+| [13 NLP & Transformers](Guides/13_NLP_TRANSFORMERS_GUIDE.md) | Text processing and HuggingFace |
+| [14 Generative AI](Guides/14_GENERATIVE_AI_GUIDE.md) | GANs, LLMs, diffusion models |
 
 ## Getting Help
 

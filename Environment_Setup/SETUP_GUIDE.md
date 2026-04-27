@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- **Git installed** on your system (see [GitHub Setup Guide](../Guides/GITHUB_SETUP_GUIDE.md) for installation)
+- **Git installed** on your system (see [GitHub Setup Guide](../Guides/03_GITHUB_SETUP_GUIDE.md) for installation)
 - **Anaconda or Miniconda** installed on your system
   - Download from: https://www.anaconda.com/products/anaconda
   - Or Miniconda: https://docs.conda.io/en/latest/miniconda.html
@@ -316,8 +316,8 @@ git stash pop  # Only if you want to restore your changes
 ## Next Steps
 
 1. Environment setup complete
-2. Read the Course Guide (`../Guides/COURSE_GUIDE.md`)
-3. Read the GitHub Setup Guide (`../Guides/GITHUB_SETUP_GUIDE.md`) if you haven't already
+2. Read the Course Guide (`../Guides/01_COURSE_GUIDE.md`)
+3. Read the GitHub Setup Guide (`../Guides/03_GITHUB_SETUP_GUIDE.md`) if you haven't already
 4. Start with Week 1 Session 1 (`../Course_Sessions/Week_1/Session_1_Introduction.ipynb`)
 
 ## Support
