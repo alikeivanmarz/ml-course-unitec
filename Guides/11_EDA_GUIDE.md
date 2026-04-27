@@ -310,3 +310,7 @@ Discard: pretty plots that confirm nothing, repeated views of the same finding, 
 - [`pandas-profiling` / `ydata-profiling`](https://github.com/ydataai/ydata-profiling) — automated EDA reports as a starting point.
 - [Tukey, *Exploratory Data Analysis*](https://www.pearson.com/store/p/exploratory-data-analysis/P100000888193) — the original treatment of EDA as a discipline.
 - [scikit-learn — feature selection module](https://scikit-learn.org/stable/modules/feature_selection.html) — mutual information, ANOVA, and other univariate selectors.
+
+---
+
+[← Previous: Datasets](10_DATASETS_GUIDE.md) | [Index](README.md) | [Next: Data Preprocessing →](12_DATA_PREPROCESSING_GUIDE.md)

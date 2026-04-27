@@ -329,3 +329,7 @@ Reproducibility on the same machine is achievable with these steps. Cross-machin
 - [MLflow documentation](https://mlflow.org/docs/latest/index.html) — experiment tracking, model registry, and deployment.
 - [Python Packaging User Guide — `pyproject.toml`](https://packaging.python.org/en/latest/specifications/pyproject-toml/) — declarative project configuration.
 - [`nbstripout`](https://github.com/kynan/nbstripout) — pre-commit hook to strip notebook outputs.
+
+---
+
+[← Previous: Building with LLMs](26_LLM_PROMPTING_GUIDE.md) | [Index](README.md) | [Next: Model Deployment →](28_DEPLOYMENT_GUIDE.md)

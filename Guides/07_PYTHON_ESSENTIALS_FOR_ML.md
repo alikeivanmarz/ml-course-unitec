@@ -1020,3 +1020,7 @@ print(f"Value: {your_variable}")
 ---
 
 **You don't need to memorize everything here. Bookmark this guide and come back to it whenever you need a quick reminder!**
+
+---
+
+[← Previous: VSCode Tips](06_VSCODE_TIPS_GUIDE.md) | [Index](README.md) | [Next: Mathematics for ML →](08_MATH_FOR_ML_GUIDE.md)

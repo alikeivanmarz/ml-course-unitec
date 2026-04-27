@@ -602,3 +602,7 @@ for text in sample_texts:
 ---
 
 **For most NLP tasks, start with the HuggingFace pipeline API -- you can get impressive results in just a few lines of code!**
+
+---
+
+[← Previous: Computer Vision](23_COMPUTER_VISION_GUIDE.md) | [Index](README.md) | [Next: Generative AI →](25_GENERATIVE_AI_GUIDE.md)

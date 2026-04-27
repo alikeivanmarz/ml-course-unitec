@@ -276,3 +276,7 @@ Multi-cursor editing replaces many uses of regex find-and-replace; familiarity w
 - [Ruff documentation](https://docs.astral.sh/ruff/) — linter and formatter rules.
 - [VSCode Keyboard Shortcuts Reference (PDF)](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf) — printable cheatsheet (per-OS variants available).
 - [VSCode Tips and Tricks](https://code.visualstudio.com/docs/getstarted/tips-and-tricks) — official compendium of less-obvious features.
+
+---
+
+[← Previous: Workflow Guide](05_WORKFLOW_GUIDE.md) | [Index](README.md) | [Next: Python Essentials for ML →](07_PYTHON_ESSENTIALS_FOR_ML.md)

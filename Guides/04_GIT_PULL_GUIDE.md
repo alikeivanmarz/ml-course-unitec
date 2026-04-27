@@ -84,3 +84,7 @@ git clean -fd
 - Always pull before each class session to get the latest notebooks and materials
 - If you want to keep your own notes or modified notebooks, save them outside the repo folder
 - Never run `git push` on this repository — it is read-only for students
+
+---
+
+[← Previous: GitHub Setup Guide](03_GITHUB_SETUP_GUIDE.md) | [Index](README.md) | [Next: Workflow Guide →](05_WORKFLOW_GUIDE.md)

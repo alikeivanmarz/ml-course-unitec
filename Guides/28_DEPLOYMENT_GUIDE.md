@@ -391,3 +391,7 @@ Drift detection rarely justifies full real-time monitoring at small scale; daily
 - [Docker — Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) — image size, layer caching, security.
 - [`uv` documentation](https://docs.astral.sh/uv/) — modern Python packaging and lockfiles.
 - [Sculley et al., *Hidden Technical Debt in Machine Learning Systems* (2015)](https://papers.nips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html) — operational considerations beyond model code.
+
+---
+
+[← Previous: ML Project Structure](27_PROJECT_STRUCTURE_GUIDE.md) | [Index](README.md) | [Next: Reading ML Research Papers →](29_READING_ML_PAPERS_GUIDE.md)

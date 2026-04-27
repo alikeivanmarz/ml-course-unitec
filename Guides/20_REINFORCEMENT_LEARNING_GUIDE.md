@@ -353,3 +353,7 @@ RL is empirical: published claims have been shown to be highly sensitive to seed
 - [Schulman et al., *Proximal Policy Optimization Algorithms* (2017)](https://arxiv.org/abs/1707.06347) — original PPO paper.
 - [Henderson et al., *Deep Reinforcement Learning that Matters* (2018)](https://arxiv.org/abs/1709.06560) — empirical study of variance and reproducibility issues in deep RL.
 - [Andrychowicz et al., *What Matters In On-Policy Reinforcement Learning?* (2020)](https://arxiv.org/abs/2006.05990) — large-scale ablation of design choices.
+
+---
+
+[← Previous: Time Series and Forecasting](19_TIME_SERIES_GUIDE.md) | [Index](README.md) | [Next: Deep Learning with Keras →](21_DEEP_LEARNING_KERAS_GUIDE.md)

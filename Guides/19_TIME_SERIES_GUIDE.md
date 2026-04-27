@@ -402,3 +402,7 @@ MAPE and sMAPE are common but problematic when actuals can be zero or near-zero.
 - [Makridakis et al., *The M5 Accuracy Competition Results* (2022)](https://www.sciencedirect.com/science/article/pii/S0169207021001874) — large-scale benchmark of forecasting methods.
 - [Lim and Zohren, *Time-Series Forecasting with Deep Learning: A Survey* (2021)](https://arxiv.org/abs/2004.13408) — survey of deep architectures for forecasting.
 - [Nixtla — `statsforecast`, `neuralforecast`, `mlforecast`](https://github.com/Nixtla) — modern Python ecosystem covering classical, ML, and DL approaches with consistent APIs.
+
+---
+
+[← Previous: Unsupervised Learning](18_UNSUPERVISED_LEARNING_GUIDE.md) | [Index](README.md) | [Next: Reinforcement Learning →](20_REINFORCEMENT_LEARNING_GUIDE.md)

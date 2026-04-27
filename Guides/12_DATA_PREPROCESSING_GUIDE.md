@@ -606,3 +606,7 @@ print(f"  RMSE: {rmse:.3f}")
 ---
 
 **Good preprocessing is often the difference between a mediocre model and a great one. When in doubt, follow the checklist in Section 8.2!**
+
+---
+
+[← Previous: Exploratory Data Analysis](11_EDA_GUIDE.md) | [Index](README.md) | [Next: ML Pipeline →](13_ML_PIPELINE_GUIDE.md)

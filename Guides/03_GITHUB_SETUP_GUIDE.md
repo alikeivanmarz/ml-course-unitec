@@ -411,3 +411,6 @@ If Git breaks completely:
 ---
 
 **Remember**: Git might seem complex at first, but you only need a few commands for this course. Focus on `git clone`, `git pull`, and `git status` - these will handle 90% of your needs!**
+---
+
+[← Previous: Quick Setup Guide](02_QUICK_SETUP_GUIDE.md) | [Index](README.md) | [Next: Git Pull Guide →](04_GIT_PULL_GUIDE.md)

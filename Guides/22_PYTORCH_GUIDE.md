@@ -379,3 +379,7 @@ for i, (x, y) in enumerate(loader):
 - [`torch.nn` module reference](https://pytorch.org/docs/stable/nn.html) — every layer and loss class.
 - [PyTorch Performance Tuning Guide](https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html) — DataLoader, AMP, and GPU optimization recipes.
 - [Paszke et al., *PyTorch: An Imperative Style, High-Performance Deep Learning Library* (2019)](https://arxiv.org/abs/1912.01703) — the original PyTorch paper.
+
+---
+
+[← Previous: Deep Learning with Keras](21_DEEP_LEARNING_KERAS_GUIDE.md) | [Index](README.md) | [Next: Computer Vision →](23_COMPUTER_VISION_GUIDE.md)

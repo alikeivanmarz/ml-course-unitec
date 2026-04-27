@@ -347,3 +347,7 @@ In feature selection, mutual information ranks features by how informative they 
 - [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf) — comprehensive reference for matrix identities and derivatives.
 - [Goodfellow, Bengio, Courville — *Deep Learning*, Part I](https://www.deeplearningbook.org/) — chapters 2–4 cover applied linear algebra, probability, and numerical computation.
 - [NumPy linear algebra reference](https://numpy.org/doc/stable/reference/routines.linalg.html) — operator and function listings.
+
+---
+
+[← Previous: Python Essentials for ML](07_PYTHON_ESSENTIALS_FOR_ML.md) | [Index](README.md) | [Next: Statistics for ML →](09_STATISTICS_FOR_ML_GUIDE.md)

@@ -224,3 +224,7 @@ When a question requires thought, it is acceptable to pause. "Let me think about
 - [Dahl et al., *A Practical Guide to Building Agents*](https://www.anthropic.com/research) — applied write-up patterns useful as a model for technical communication.
 - [Wickham, *Tidy Data*](https://vita.had.co.nz/papers/tidy-data.pdf) — clean data presentation underlies clean charts.
 - [Statwing — Visualization Selection Guide](https://www.data-to-viz.com/) — chart-type selector for data-to-visualization choices.
+
+---
+
+[← Previous: Academic Writing Style](33_ACADEMIC_WRITING_STYLE_GUIDE.md) | [Index](README.md)

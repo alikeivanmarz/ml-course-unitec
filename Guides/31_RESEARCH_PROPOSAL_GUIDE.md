@@ -264,3 +264,7 @@ Most rejected proposals fail for two or more of these reasons simultaneously. A 
 - [Booth, Colomb, Williams, *The Craft of Research* (2016)](https://press.uchicago.edu/ucp/books/book/chicago/C/bo24216433.html) — foundational treatment of research questions and argument structure.
 - [Cohen, *Writing the Successful Thesis and Dissertation Proposal*](https://www.routledge.com/) — graduate-level proposal preparation.
 - [The PhD Proposal: A Short Guide — Tara Brabazon (lecture series)](https://www.youtube.com/results?search_query=tara+brabazon+phd+proposal) — practical advice on common failure modes.
+
+---
+
+[← Previous: Literature Review](30_LITERATURE_REVIEW_GUIDE.md) | [Index](README.md) | [Next: Technical Report and Paper Writing →](32_REPORT_AND_PAPER_WRITING_GUIDE.md)

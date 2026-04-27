@@ -249,3 +249,6 @@ After setup, your course materials are in:
 
 **One-time only**: This setup lasts the entire course  
 **Internet required**: For downloading packages and materials
+---
+
+[← Previous: Course Guide](01_COURSE_GUIDE.md) | [Index](README.md) | [Next: GitHub Setup Guide →](03_GITHUB_SETUP_GUIDE.md)

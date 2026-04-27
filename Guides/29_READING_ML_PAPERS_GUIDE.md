@@ -279,3 +279,7 @@ Annotated PDFs alone are insufficient — annotations are tied to a single file 
 - [Semantic Scholar](https://www.semanticscholar.org/) — search with influence and citation context.
 - [The Machine Learning Reproducibility Checklist](https://www.cs.mcgill.ca/~jpineau/ReproducibilityChecklist.pdf) — what reproducible papers contain.
 - [Andrew Ng — *How to read research papers* (lecture)](https://www.youtube.com/results?search_query=andrew+ng+reading+research+papers) — practical reading advice from a high-volume reader.
+
+---
+
+[← Previous: Model Deployment](28_DEPLOYMENT_GUIDE.md) | [Index](README.md) | [Next: Literature Review →](30_LITERATURE_REVIEW_GUIDE.md)

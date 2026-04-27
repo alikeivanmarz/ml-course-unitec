@@ -445,3 +445,7 @@ Run only fast tests in CI: `pytest -m "not slow"`. Run only slow tests on a sche
 - [Smith, *Software Engineering for Machine Learning: A Case Study* (2019)](https://arxiv.org/abs/1909.13076) — empirical study of ML testing practices in industry.
 - [Beck, *Test-Driven Development: By Example* (2002)](https://www.pearson.com/store/p/test-driven-development-by-example/P100000388488) — foundational treatment of TDD; concepts apply to ML.
 - [Google — *ML Test Score* (2017)](https://research.google/pubs/pub46555/) — rubric for ML system testing maturity.
+
+---
+
+[← Previous: ML Debugging](15_ML_DEBUGGING_GUIDE.md) | [Index](README.md) | [Next: Model Interpretability →](17_INTERPRETABILITY_GUIDE.md)

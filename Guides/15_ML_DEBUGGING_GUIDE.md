@@ -574,3 +574,7 @@ Model crashes?
 ---
 
 **When your model isn't working, don't guess -- follow the debugging checklist in Section 3.1 and work through it step by step!**
+
+---
+
+[← Previous: Model Evaluation](14_MODEL_EVALUATION_GUIDE.md) | [Index](README.md) | [Next: Testing ML Code →](16_TESTING_ML_CODE_GUIDE.md)

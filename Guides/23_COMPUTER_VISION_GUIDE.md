@@ -619,3 +619,7 @@ plt.show()
 ---
 
 **Start with a pre-trained model and transfer learning -- you'll get better results faster than training from scratch!**
+
+---
+
+[← Previous: PyTorch Reference](22_PYTORCH_GUIDE.md) | [Index](README.md) | [Next: NLP & Transformers →](24_NLP_TRANSFORMERS_GUIDE.md)

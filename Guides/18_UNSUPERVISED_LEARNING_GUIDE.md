@@ -373,3 +373,7 @@ LOF is transductive — it does not produce a model for scoring new data unless 
 - [van der Maaten and Hinton, *Visualizing Data using t-SNE* (2008)](https://www.jmlr.org/papers/v9/vandermaaten08a.html) — original t-SNE paper.
 - [McInnes et al., *UMAP* (2018)](https://arxiv.org/abs/1802.03426) — original UMAP paper.
 - [Liu et al., *Isolation Forest* (2008)](https://ieeexplore.ieee.org/document/4781136) — original Isolation Forest paper.
+
+---
+
+[← Previous: Model Interpretability](17_INTERPRETABILITY_GUIDE.md) | [Index](README.md) | [Next: Time Series and Forecasting →](19_TIME_SERIES_GUIDE.md)

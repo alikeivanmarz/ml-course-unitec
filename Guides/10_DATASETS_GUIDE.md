@@ -338,3 +338,7 @@ A short dataset card is appropriate for any shared dataset; a full datasheet is 
 - [Gebru et al., *Datasheets for Datasets* (2021)](https://arxiv.org/abs/1803.09010) — the canonical framework for dataset documentation.
 - [Mitchell et al., *Model Cards for Model Reporting* (2019)](https://arxiv.org/abs/1810.03993) — the model-side counterpart to dataset cards.
 - [Creative Commons licenses](https://creativecommons.org/licenses/) — license terms in summary form.
+
+---
+
+[← Previous: Statistics for ML](09_STATISTICS_FOR_ML_GUIDE.md) | [Index](README.md) | [Next: Exploratory Data Analysis →](11_EDA_GUIDE.md)

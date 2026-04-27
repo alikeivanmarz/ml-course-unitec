@@ -365,3 +365,7 @@ Auto-imported BibTeX entries should be checked: title capitalisation, missing pa
 - [The ACM Author Guide](https://www.acm.org/publications/authors/information-for-authors) — formatting and citation conventions for ACM venues.
 - [Wickham, *Tidy Data* (2014)](https://vita.had.co.nz/papers/tidy-data.pdf) — data presentation as a writing concern.
 - [Tufte, *The Visual Display of Quantitative Information*](https://www.edwardtufte.com/tufte/books_vdqi) — figure design principles.
+
+---
+
+[← Previous: Research Proposal Writing](31_RESEARCH_PROPOSAL_GUIDE.md) | [Index](README.md) | [Next: Academic Writing Style →](33_ACADEMIC_WRITING_STYLE_GUIDE.md)

@@ -681,3 +681,7 @@ from sklearn.metrics import (classification_report, confusion_matrix,
 ---
 
 **Follow the checklist in Section 6, use Pipelines to prevent data leakage, and always evaluate on a held-out test set. The steps are always the same -- only the data and models change!**
+
+---
+
+[← Previous: Data Preprocessing](12_DATA_PREPROCESSING_GUIDE.md) | [Index](README.md) | [Next: Model Evaluation →](14_MODEL_EVALUATION_GUIDE.md)

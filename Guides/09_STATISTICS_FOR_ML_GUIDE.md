@@ -320,3 +320,7 @@ The American Statistical Association's 2016 statement on p-values rejects mechan
 - [`scipy.stats` documentation](https://docs.scipy.org/doc/scipy/reference/stats.html) — every test and distribution covered above.
 - [`statsmodels` documentation](https://www.statsmodels.org/) — regression, hypothesis tests, multiple-comparison correction.
 - [Wilkinson and the Task Force on Statistical Inference, *Statistical Methods in Psychology Journals* (1999)](https://www.apa.org/pubs/journals/releases/amp-548594.pdf) — reporting guidelines applicable beyond psychology.
+
+---
+
+[← Previous: Mathematics for ML](08_MATH_FOR_ML_GUIDE.md) | [Index](README.md) | [Next: Datasets →](10_DATASETS_GUIDE.md)

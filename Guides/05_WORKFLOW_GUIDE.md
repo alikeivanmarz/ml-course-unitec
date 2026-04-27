@@ -507,3 +507,6 @@ git reset --hard origin/main  # Warning: loses local changes
 ---
 
 **Remember: Learning ML is a journey, not a destination. Take your time and enjoy the process!**
+---
+
+[← Previous: Git Pull Guide](04_GIT_PULL_GUIDE.md) | [Index](README.md) | [Next: VSCode Tips →](06_VSCODE_TIPS_GUIDE.md)

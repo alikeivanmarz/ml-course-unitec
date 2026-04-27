@@ -436,3 +436,7 @@ LLM judges are biased toward longer responses and toward outputs from models in 
 - [Wei et al., *Chain-of-Thought Prompting* (2022)](https://arxiv.org/abs/2201.11903) — step-by-step reasoning prompts.
 - [Zheng et al., *Judging LLM-as-a-Judge* (2023)](https://arxiv.org/abs/2306.05685) — biases and calibration of LLM judges.
 - [Pydantic documentation](https://docs.pydantic.dev/) — schema validation for LLM outputs.
+
+---
+
+[← Previous: Generative AI](25_GENERATIVE_AI_GUIDE.md) | [Index](README.md) | [Next: ML Project Structure →](27_PROJECT_STRUCTURE_GUIDE.md)

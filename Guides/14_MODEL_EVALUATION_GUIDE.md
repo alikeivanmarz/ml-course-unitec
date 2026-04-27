@@ -534,3 +534,7 @@ plt.show()
 ---
 
 **The best model isn't always the one with the highest accuracy -- it's the one that uses the right metric for the right problem!**
+
+---
+
+[← Previous: ML Pipeline](13_ML_PIPELINE_GUIDE.md) | [Index](README.md) | [Next: ML Debugging →](15_ML_DEBUGGING_GUIDE.md)

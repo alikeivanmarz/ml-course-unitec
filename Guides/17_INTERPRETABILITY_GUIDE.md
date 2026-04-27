@@ -293,3 +293,7 @@ Multiple methods used together typically produce more reliable conclusions than 
 - [Lundberg and Lee, *A Unified Approach to Interpreting Model Predictions* (2017)](https://arxiv.org/abs/1705.07874) — original SHAP paper.
 - [Ribeiro, Singh, Guestrin, *"Why Should I Trust You?": Explaining the Predictions of Any Classifier* (2016)](https://arxiv.org/abs/1602.04938) — original LIME paper.
 - [Mitchell et al., *Model Cards for Model Reporting* (2019)](https://arxiv.org/abs/1810.03993) — model card framework.
+
+---
+
+[← Previous: Testing ML Code](16_TESTING_ML_CODE_GUIDE.md) | [Index](README.md) | [Next: Unsupervised Learning →](18_UNSUPERVISED_LEARNING_GUIDE.md)

@@ -304,3 +304,7 @@ No tool replaces a reading by a colleague. The errors that remain after automate
 - [Purdue OWL — Academic Writing](https://owl.purdue.edu/owl/general_writing/academic_writing/index.html) — comprehensive online reference.
 - [Hemingway Editor](https://hemingwayapp.com/) — readability and sentence-level analysis.
 - [Vale](https://vale.sh/) — customisable, scriptable style linter.
+
+---
+
+[← Previous: Technical Report and Paper Writing](32_REPORT_AND_PAPER_WRITING_GUIDE.md) | [Index](README.md) | [Next: Presenting Technical ML Projects →](34_PRESENTATION_GUIDE.md)

@@ -269,3 +269,7 @@ A review that reads as a string of summaries fails its purpose. A review that or
 - [Wohlin, *Guidelines for snowballing in systematic literature studies* (2014)](https://dl.acm.org/doi/10.1145/2601248.2601268) — formalisation of snowballing as a search strategy.
 - [Zotero documentation](https://www.zotero.org/support/) — reference management workflows.
 - [The Litmaps blog — reading workflows](https://www.litmaps.com/learn) — applied search and tracking strategies.
+
+---
+
+[← Previous: Reading ML Research Papers](29_READING_ML_PAPERS_GUIDE.md) | [Index](README.md) | [Next: Research Proposal Writing →](31_RESEARCH_PROPOSAL_GUIDE.md)
