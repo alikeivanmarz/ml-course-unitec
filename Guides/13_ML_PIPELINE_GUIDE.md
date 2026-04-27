@@ -672,10 +672,10 @@ from sklearn.metrics import (classification_report, confusion_matrix,
 
 ## 9. Resources
 
-- [Data Preprocessing Guide](07_DATA_PREPROCESSING_GUIDE.md) -- detailed preprocessing reference
-- [Model Evaluation Guide](09_MODEL_EVALUATION_GUIDE.md) -- all metrics and tuning methods
-- [ML Debugging Guide](10_ML_DEBUGGING_GUIDE.md) -- troubleshooting when things go wrong
-- [Python Essentials Guide](06_PYTHON_ESSENTIALS_FOR_ML.md) -- Python and library basics
+- [Data Preprocessing Guide](12_DATA_PREPROCESSING_GUIDE.md) -- detailed preprocessing reference
+- [Model Evaluation Guide](14_MODEL_EVALUATION_GUIDE.md) -- all metrics and tuning methods
+- [ML Debugging Guide](15_ML_DEBUGGING_GUIDE.md) -- troubleshooting when things go wrong
+- [Python Essentials Guide](07_PYTHON_ESSENTIALS_FOR_ML.md) -- Python and library basics
 - [Scikit-learn Pipeline Documentation](https://scikit-learn.org/stable/modules/compose.html)
 
 ---
