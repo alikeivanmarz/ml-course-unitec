@@ -267,4 +267,4 @@ Most rejected proposals fail for two or more of these reasons simultaneously. A 
 
 ---
 
-[← Previous: Literature Review](30_LITERATURE_REVIEW_GUIDE.md) | [Index](README.md) | [Next: Technical Report and Paper Writing →](32_REPORT_AND_PAPER_WRITING_GUIDE.md)
+[← Previous: Literature Review](30_LITERATURE_REVIEW_GUIDE.md) | [Index](README.md) | [Next: End-to-End ML Project Workflow →](32_PROJECT_WORKFLOW_GUIDE.md)

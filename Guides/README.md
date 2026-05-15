@@ -1,6 +1,6 @@
 # Guides
 
-Thirty-four reference guides covering the full path from setup, through ML foundations, modelling, deep learning, engineering, and finally research communication. Files are numbered in a logical reading order, but most guides are self-contained — once setup is complete, treat the rest as a **lookup library** to consult when a topic comes up.
+Thirty-five reference guides covering the full path from setup, through ML foundations, modelling, deep learning, engineering, and finally research communication. Files are numbered in a logical reading order, but most guides are self-contained — once setup is complete, treat the rest as a **lookup library** to consult when a topic comes up.
 
 ## How to use these guides
 
@@ -10,7 +10,7 @@ Thirty-four reference guides covering the full path from setup, through ML found
 - **Other modelling families (18–20)** → unsupervised learning, time series, reinforcement learning. Reference when a project's structure does not fit standard supervised regression or classification.
 - **Deep learning (21–26)** → frameworks, modalities, generative models, LLM applications.
 - **Engineering & deployment (27–28)** → packaging an ML project for re-use and serving.
-- **Research & communication (29–34)** → reading, reviewing, proposing, writing, and presenting research.
+- **Research & communication (29–35)** → reading, reviewing, proposing, executing, writing, and presenting research.
 
 ## Reading order
 
@@ -79,11 +79,12 @@ Thirty-four reference guides covering the full path from setup, through ML found
 | 29 | [Reading ML Research Papers](29_READING_ML_PAPERS_GUIDE.md) | Three-pass method, paper anatomy, decoding notation, evaluating claims |
 | 30 | [Literature Review](30_LITERATURE_REVIEW_GUIDE.md) | Search strategies, snowballing, triage, synthesis tables, common pitfalls |
 | 31 | [Research Proposal Writing](31_RESEARCH_PROPOSAL_GUIDE.md) | Structure, research questions, scope, evaluation plans, what reviewers look for |
-| 32 | [Technical Report and Paper Writing](32_REPORT_AND_PAPER_WRITING_GUIDE.md) | Section anatomy, abstract patterns, figures, tables, citation mechanics |
-| 33 | [Academic Writing Style](33_ACADEMIC_WRITING_STYLE_GUIDE.md) | Tense, voice, hedging, signposting, sentence-level style, common pitfalls |
-| 34 | [Presenting Technical ML Projects](34_PRESENTATION_GUIDE.md) | Talk structure, slide design, honest metrics, demos, Q&A |
+| 32 | [End-to-End ML Project Workflow](32_PROJECT_WORKFLOW_GUIDE.md) | Step-by-step pipeline from problem definition through final delivery, with tips at each step |
+| 33 | [Technical Report and Paper Writing](33_REPORT_AND_PAPER_WRITING_GUIDE.md) | Section anatomy, abstract patterns, figures, tables, citation mechanics |
+| 34 | [Academic Writing Style](34_ACADEMIC_WRITING_STYLE_GUIDE.md) | Tense, voice, hedging, signposting, sentence-level style, common pitfalls |
+| 35 | [Presenting Technical ML Projects](35_PRESENTATION_GUIDE.md) | Talk structure, slide design, honest metrics, demos, Q&A |
 
 ## Conventions
 
 - Setup guides 01–05 assume the course conda environment named `mlcourse` and the **ML Course (Python 3.10)** Jupyter kernel.
-- Reference guides 06–34 are written to be standalone — code uses generic data (`make_classification`, public sources) and generic placeholders (`X`, `y`, `df`, `model`) so they can be used outside this course.
+- Reference guides 06–35 are written to be standalone — code uses generic data (`make_classification`, public sources) and generic placeholders (`X`, `y`, `df`, `model`) so they can be used outside this course.

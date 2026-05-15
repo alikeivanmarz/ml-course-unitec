@@ -227,4 +227,4 @@ When a question requires thought, it is acceptable to pause. "Let me think about
 
 ---
 
-[← Previous: Academic Writing Style](33_ACADEMIC_WRITING_STYLE_GUIDE.md) | [Index](README.md)
+[← Previous: Academic Writing Style](34_ACADEMIC_WRITING_STYLE_GUIDE.md) | [Index](README.md)

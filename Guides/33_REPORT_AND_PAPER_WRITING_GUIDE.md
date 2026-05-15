@@ -368,4 +368,4 @@ Auto-imported BibTeX entries should be checked: title capitalisation, missing pa
 
 ---
 
-[← Previous: Research Proposal Writing](31_RESEARCH_PROPOSAL_GUIDE.md) | [Index](README.md) | [Next: Academic Writing Style →](33_ACADEMIC_WRITING_STYLE_GUIDE.md)
+[← Previous: End-to-End ML Project Workflow](32_PROJECT_WORKFLOW_GUIDE.md) | [Index](README.md) | [Next: Academic Writing Style →](34_ACADEMIC_WRITING_STYLE_GUIDE.md)
