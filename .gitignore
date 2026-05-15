@@ -237,6 +237,7 @@ mlcourse-gpu.yml
 .idea/
 .claude/
 CLAUDE.md
+AGENTS.md
 *.swp
 *.swo
 *~
