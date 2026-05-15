@@ -18,13 +18,13 @@ A presentation about a machine learning project has a specific job: convey what 
 
 A reliable structure for a 10–20 minute technical talk:
 
-| Section | Duration (15 min) | Purpose |
+| Section | Duration (12 min) | Purpose |
 |---------|-------------------|---------|
 | Problem | 1.5 min | Why this work matters; who it serves |
-| Data | 2 min | Source, size, key characteristics, preprocessing summary |
-| Method | 3 min | Approach chosen and why; alternatives considered briefly |
-| Results | 4 min | Headline metric, comparison to baseline, error analysis |
-| Limitations | 1.5 min | Where the model fails; honest scope |
+| Data | 1.5 min | Source, size, key characteristics, preprocessing summary |
+| Method | 2 min | Approach chosen and why; alternatives considered briefly |
+| Results | 3 min | Headline metric, comparison to baseline, error analysis |
+| Limitations | 1 min | Where the model fails; honest scope |
 | Next steps | 1 min | What would be done with more time or data |
 | Q&A | 2 min | Discussion |
 
