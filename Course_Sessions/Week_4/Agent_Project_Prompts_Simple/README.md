@@ -30,6 +30,8 @@ Copy-paste prompts for building a complete ML project **together with** a coding
 | `09_Write_The_Report.md` | The LaTeX report (may take 2–3 sessions) |
 | `10_Final_Check.md` | Full quality check before you call it done |
 | `11_Helper_Prompts.md` | Resume / explain / debug / quiz-me prompts for any time |
+| `12_Review_My_Project.md` | Standalone: independent review of ANY finished project and report (yours or built with these prompts) — saves numbered findings to `REVIEW_FINDINGS.md` |
+| `13_Improve_My_Project.md` | Fixes the review findings YOU choose, one at a time, with you in the loop |
 
 ## Tips for limited / free agent plans
 
