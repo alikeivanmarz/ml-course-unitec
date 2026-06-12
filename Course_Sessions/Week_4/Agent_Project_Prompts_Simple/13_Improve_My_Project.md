@@ -30,6 +30,12 @@ review instead). Then work WITH me, not for me:
    ask me 3 quick questions to check I understood the fixes, and commit the work
    (print the git commands if git isn't set up).
 
+When a fix is about wording: edit, don't rewrite my argument. Keep my claims,
+citations, and technical terms exactly as they are; make the prose simpler, more
+direct, and more natural (plain words over inflated ones, varied sentence length,
+no filler, no stock connectors in series); and flag — don't write — anything that
+needs my own analysis or judgement.
+
 Never invent results, never "improve" numbers, and never touch issues I didn't pick.
 ```
 

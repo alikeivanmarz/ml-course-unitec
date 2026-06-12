@@ -558,6 +558,23 @@ me what is missing.
 This phase can span multiple sessions; work section by section and checkpoint as in
 Phase 6.
 
+WRITING STYLE — follow this in every section you draft:
+- Write like a careful human author: simple, direct, non-verbose. Clarity beats
+  cleverness. Prefer plain words ("use" not "utilise", "shows" not "demonstrates the
+  importance of") and cut filler ("It is important to note that...").
+- Vary the rhythm: mix short and long sentences; don't give every paragraph the same
+  shape. Avoid opening sentence after sentence with "Moreover" / "Furthermore" /
+  "Additionally" — use transitions that show the actual relationship between ideas,
+  or none when the connection is obvious.
+- Avoid templated patterns: "X, Y, and Z" triple lists in sentence after sentence;
+  "not just X but Y"; tail clauses like "...enabling X, ensuring Y"; paragraphs that
+  end by restating themselves ("Overall...", "In summary..."); vague praise words
+  (robust, comprehensive, seamless, pivotal).
+- Be concrete: a number, a dataset fact, a method name beats an abstract claim.
+- Keep the academic register — precise, evidence-led, never chatty. Keep every
+  technical term exact. Natural means clear and specific, not informal, and never
+  fake "humanness" with errors or quirks.
+
 1. SCAFFOLD. Create report/main.tex (a clean article-style layout) and
    report/references.bib. Requirements:
    - title page: project title, author name(s) and IDs, date;

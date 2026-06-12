@@ -17,6 +17,26 @@ RESEARCH_PLAN.md, LITERATURE_NOTES.md, results/*.csv, results/figures/* and the
 captions file. No fact, number, or citation from anywhere else. If a section needs
 something we don't have, stop and tell me what's missing.
 
+WRITING STYLE — follow this in every section you draft:
+- Write like a careful human author: simple, direct, non-verbose. Clarity beats
+  cleverness. Prefer plain words ("use" not "utilise", "shows" not "demonstrates the
+  importance of") and cut filler ("It is important to note that...", "In today's
+  rapidly evolving world...").
+- Vary the rhythm. Mix short and long sentences; don't make every paragraph the same
+  shape and size. Avoid starting sentence after sentence with "Moreover",
+  "Furthermore", "Additionally" — use transitions that show the actual relationship
+  between ideas, or none when the connection is obvious.
+- Avoid templated patterns: "X, Y, and Z" triple lists in sentence after sentence;
+  "not just X but Y"; tail clauses like "...enabling X, ensuring Y, supporting Z";
+  paragraph-ending sentences that just restate the paragraph ("Overall...",
+  "In summary..."); vague praise words (robust, comprehensive, seamless, pivotal,
+  cutting-edge).
+- Be concrete. A number, a dataset fact, a method name beats an abstract claim every
+  time.
+- Keep the academic register: precise, evidence-led, never chatty. Keep every
+  technical term exact. Never fake "humanness" with errors or quirks — natural means
+  clear and specific, not informal.
+
 1. Set up report/main.tex (clean article style) and report/references.bib:
    title page (title, author name(s) and IDs, date), automatic table of contents,
    numbered sections and pages, IEEE-style numeric citations. Compile NOW and fix any
@@ -56,7 +76,9 @@ something we don't have, stop and tell me what's missing.
 5. Hand it over for MY pass: walk me through the evidence ledger, then give me my
    author checklist — verify every number, rewrite anything I couldn't defend out
    loud in my own words, and confirm every reference is a real paper I actually read.
-   This draft is raw material; the final words must be mine.
+   Also point me to the sections where the wording still reads most generic or
+   templated, so I rewrite those in my own voice first. This draft is raw material;
+   the final words must be mine.
 
 6. Update PROJECT_STATE.md and commit.
 

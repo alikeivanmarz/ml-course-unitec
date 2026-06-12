@@ -37,6 +37,20 @@ Review these areas:
    figure/table actually referenced and discussed in the text. Clear academic
    writing, logical flow, no rambling or repeated content, sensible length per
    section.
+   Also judge whether the prose reads natural and human-authored or generic and
+   machine-templated. Quote the worst examples you find of:
+   - verbose or inflated wording where plain words would do ("utilise",
+     "demonstrates the importance of", "It is important to note that...");
+   - uniform rhythm — every sentence the same length, every paragraph the same
+     shape, sentence after sentence opening with "Moreover" / "Furthermore" /
+     "Additionally";
+   - templated patterns: "X, Y, and Z" triple lists everywhere, "not just X but Y",
+     tail clauses like "...enabling X, ensuring Y", paragraphs that end by restating
+     themselves ("Overall...", "In summary..."), vague praise words (robust,
+     comprehensive, seamless, pivotal);
+   - abstract claims where a concrete number, dataset fact, or method name should be.
+   For each, recommend the simpler, more direct rewrite. The goal is clear, specific,
+   natural academic writing in the author's own voice — not informality.
 
 2. LITERATURE REVIEW
    Does it critically engage with at least 10 quality sources (peer-reviewed papers,
