@@ -1,6 +1,6 @@
 # Agent Project Prompts — Simple Pack
 
-Copy-paste prompts for building a complete ML project **together with** a coding agent (Claude Code, Copilot agent mode, Codex, Cursor): from your idea to a clean git repo and a LaTeX report.
+Copy-paste prompts for building a complete ML project **together with** any coding agent (Claude Code, Copilot agent mode, Codex, Cursor, ...): from your idea to a clean git repo and a LaTeX report.
 
 **The most important idea:** you are present the whole time. The agent never runs ahead on its own — it tells you what it wants to do, waits for your OK, does one small step, then shows and explains the result. You make every decision. You learn by being in the loop, not by watching.
 
@@ -33,8 +33,10 @@ Copy-paste prompts for building a complete ML project **together with** a coding
 | `12_Review_My_Project.md` | Standalone: independent review of ANY finished project and report (yours or built with these prompts) — saves numbered findings to `REVIEW_FINDINGS.md` |
 | `13_Improve_My_Project.md` | Fixes the review findings YOU choose, one at a time, with you in the loop |
 
-## Tips for limited / free agent plans
+## Working efficiently with the agent
 
-- One step per session, always. Stop when the step is done.
+These habits keep every session short, focused, and easy to follow — whatever agent or model you use:
+
+- One step per session, always. Stop when the step is done, even when it's going well.
 - No subagents, no web browsing — you supply the dataset; you find and read the papers yourself (the agent gives you search terms in step 02).
 - If the agent starts getting confused mid-session, use the "Save and stop" helper in `11_Helper_Prompts.md` and start fresh.

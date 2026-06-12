@@ -4,7 +4,7 @@ This pack is a set of copy-paste prompts that let you drive a coding agent (Clau
 
 You bring the project idea, the dataset, and the candidate models. The prompts make the agent work as your **mentor and pair engineer**: it asks before it assumes, it explains every choice, it stops for your decisions, and it checks your understanding at every phase. You stay the author and the decision-maker — the agent is the power tool, not the pilot.
 
-The pack is designed for **limited / free-tier agent plans**: one phase per session, no subagents, no open-ended web browsing, and a state-file pattern so a brand-new session can pick up exactly where the last one stopped.
+The pack is built around **short, focused sessions**: one phase per session, no subagents, no open-ended web browsing, and a state-file pattern so a brand-new session can pick up exactly where the last one stopped. It works the same with any coding agent and any model.
 
 > **AI-use note.** Use this workflow only in ways your lecturer and course policy permit. You remain the author of everything produced: you must be able to explain and defend every line of code and every sentence of the report. By default the agent drafts report prose strictly from your project's verified artefacts and you must then verify and rewrite it in your own voice; if your course policy is stricter, restrict the agent in Phase 8 to outlines, critique, and editing feedback only.
 
@@ -38,13 +38,13 @@ The pack is designed for **limited / free-tier agent plans**: one phase per sess
 
 ### One phase per session — why
 
-On limited or free-tier plans, long sessions run out of context or usage mid-task, and a half-finished phase is the most expensive failure mode there is. One phase per session keeps every run short, focused, and cheap, and the state files mean nothing is lost between sessions.
+Long sessions drift: the agent loses track of earlier decisions, quality drops, and a half-finished phase is the most expensive failure mode there is. One phase per session keeps every run short and focused, and the state files mean nothing is lost between sessions.
 
-### Usage-budget discipline
+### Session discipline
 
-- **Stop the agent after each phase.** Do not chain phases in one session, even if you have budget left.
-- **No subagents or multi-agent modes** — they multiply usage for little benefit at this scale.
-- **No open-ended web browsing.** The dataset comes from a link or file *you* supply. Literature comes from papers *you* gather (Phase 1 tells the agent to give you a search strategy; you do the searching in Google Scholar — that is free).
+- **Stop the agent after each phase.** Do not chain phases in one session, even when it is going well.
+- **No subagents or multi-agent modes** — they take the work out of your sight, and you must be able to follow and defend every step.
+- **No open-ended web browsing.** The dataset comes from a link or file *you* supply. Literature comes from papers *you* gather (Phase 1 tells the agent to give you a search strategy; you do the searching in Google Scholar yourself).
 - **Always end a session by asking the agent to summarise** what changed and what you should inspect before the next session. The Master Prompt makes this automatic.
 - If the agent starts losing the thread mid-session, use the **Context Squeeze** utility prompt (Section 13) immediately rather than pushing on.
 
@@ -735,7 +735,7 @@ me honest feedback and the answer a strong student would have given. Cover data,
 splits, every method, the results, and the limitations. Keep going until I say stop.
 ```
 
-### Context Squeeze (limited-tier rescue — use the moment a session starts degrading)
+### Context Squeeze (use the moment a session starts degrading)
 
 ```text
 Stop the current work. Summarise everything essential from this session into
