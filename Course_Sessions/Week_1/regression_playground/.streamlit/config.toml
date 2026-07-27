@@ -1,0 +1,11 @@
+# Theme for the Regression Playground - matches the course lecture slides.
+[theme]
+base = "light"
+primaryColor = "#A8622D"
+backgroundColor = "#F4F1EA"
+secondaryBackgroundColor = "#ECE7DC"
+textColor = "#171A23"
+font = "serif"
+
+[browser]
+gatherUsageStats = false
