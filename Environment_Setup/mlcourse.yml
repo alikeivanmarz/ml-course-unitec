@@ -58,6 +58,7 @@ dependencies:
     - opencv-python
     - pillow
     - ultralytics
+    - lap  # linear assignment for the YOLO object tracker (ByteTrack/BoT-SORT)
     - yolov5
 
     # Data Visualization
@@ -94,6 +95,8 @@ dependencies:
 
     # MLOps & Deployment
     - streamlit
+    - streamlit-webrtc  # live webcam streaming for the YOLO dashboard
+    - av                # PyAV, video frame decoding for streamlit-webrtc
     - gradio
     - fastapi
     - uvicorn

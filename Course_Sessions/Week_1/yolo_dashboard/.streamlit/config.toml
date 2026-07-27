@@ -1,0 +1,16 @@
+# Theme for YOLO Vision Lab — a dark, professional dashboard look.
+# Tweak these colours to rebrand the app.
+[theme]
+base = "dark"
+primaryColor = "#00D8A0"
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#161A22"
+textColor = "#F4F6FA"
+font = "sans serif"
+
+[server]
+# Allow larger image/video uploads (MB).
+maxUploadSize = 200
+
+[browser]
+gatherUsageStats = false

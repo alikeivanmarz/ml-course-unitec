@@ -1,0 +1,10 @@
+# Downloaded model weights (auto-fetched on first run)
+*.pt
+
+# Python / Streamlit cruft
+__pycache__/
+*.pyc
+
+# Captured frames / outputs
+captured_frame_*.jpg
+detections.csv
