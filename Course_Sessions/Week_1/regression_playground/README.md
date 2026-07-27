@@ -1,111 +1,188 @@
 # Regression Playground
 
 An interactive laboratory for **Week 1 · Session 2 — Regression Techniques and
-Model Evaluation** (Unitec ML Course). Students make a prediction, change
-something, watch the consequence, and explain what happened — rather than read a
-passive dashboard.
+Model Evaluation** in the Unitec Machine Learning course.
 
-It is the regression companion to the Week 1 `yolo_dashboard`, and it reuses the
-lecture slides' visual identity (cream / terracotta palette, serif titles) and
-notation (`theta`, `alpha`, `J(theta)`).
+Students are asked to predict, change something, inspect the evidence, and then
+explain what happened. The app complements the Session 2 notebook; it is not a
+replacement for writing and interpreting regression code.
+
+The interface retains the course slides' warm cream/terracotta identity, with
+readable sans-serif body text and serif headings.
 
 ---
 
 ## The six workspaces
 
-| Tab | What students do | Concepts |
+| Workspace | Student activity | Main concepts |
 |---|---|---|
-| **Fit the Line** | Fit a line by hand, then reveal least squares | line of best fit, residuals, SSE/MSE |
-| **Gradient Descent** | Watch the machine find the same line by walking downhill | cost `J(θ)`, learning rate α, convergence vs divergence |
-| **Feature Lab** | Pick a dataset, find the best ≤3-feature model | correlation, single vs multiple regression, coefficient interpretation |
-| **Model Arena** | Pick a dataset + two models; see the data with each model's fit, then compare | train vs test, generalisation, feature importance |
-| **Overfitting & Regularisation** | Push polynomial degree, then tame it with Ridge/Lasso | bias–variance, cross-validation, L1/L2, coefficient paths |
+| **Fit the Line** | Adjust slope and intercept, inspect residuals and compare with least squares | line of best fit, residuals, SSE, MSE, R² |
+| **Gradient Descent** | Change the data shape, scrub through the fitted `θ` values and compare several learning-rate cost curves on the same observations | cost `J(θ)`, learning rate `α`, convergence, divergence and model mismatch |
+| **Feature Lab** | Choose a small feature set, inspect associations and compare candidate sets fairly | correlation, simple vs multiple regression, standardised coefficients, multicollinearity |
+| **Model Arena** | Compare two models on the same split, make a choice, then reveal held-out performance | baselines, training vs validation/test, generalisation, model comparison |
+| **Generalisation & Regularisation** | Change polynomial degree, inspect fold scores, then tune Ridge or Lasso | underfit/overfit, cross-validation, bias–variance, L1/L2, coefficient paths |
+| **Diagnose** | Identify deliberately generated residual patterns before revealing the explanation | linearity, constant variance, residual normality, independence, outliers and leverage |
 
-The *Reveal* boxes stay collapsed so students can predict before seeing the answer.
+The workspaces use a vertical tab rail in the left sidebar. It stays visible on
+wide classroom screens and collapses behind Streamlit's standard menu control on
+narrow screens.
 
-**Models (Model Arena):** Mean baseline, Linear, Polynomial, Ridge, Lasso,
-Decision Tree, Random Forest, SVM (RBF), K-Nearest Neighbours, and LightGBM /
-XGBoost when installed. With one feature selected you see each model's fitted
-curve on the data scatter (line, smooth curve, or a tree's step-like fit); with
-several features you get predicted-vs-actual plus feature-importance bars. All
-equations render as proper maths (θ, α, `J(θ)`).
+Each workspace begins with a short challenge. Relevant outcomes stay hidden
+until the student makes or locks a prediction; explanations are revealed after
+the observation, not before it.
 
 ---
 
-## How to run
+## Fair model selection and the locked test
 
-```bash
-# 1. Activate the course environment
-conda activate mlcourse
+Activities that select features or tune a model follow this sequence:
 
-# 2. Go to this folder
-cd "Course_Sessions/Week_1/regression_playground"
+1. The data split and random seed are held constant for a fair comparison.
+2. Candidate features and hyperparameters are compared with cross-validation on
+   the training data only.
+3. The student records or locks a choice.
+4. The untouched test result is then revealed once as a final check.
+5. Changing the choice locks the test result again.
 
-# 3. (first time only) install anything missing
-pip install -r requirements.txt
+This prevents the test set from becoming another tuning set. Cross-validation
+charts report fold-level scores (including mean and spread), and RMSE is always
+shown as a non-negative error in the target's original units.
 
-# 4. Launch
-streamlit run app.py
-```
+---
 
-Opens at **http://localhost:8501**. Stop with `Ctrl + C`.
-No conda? Any Python 3.10+ environment works — `pip install -r requirements.txt`.
+## Models
+
+Both Model Arena selectors expose the complete model list directly:
+
+- Mean-prediction baseline
+- Ordinary Linear Regression
+- Polynomial Regression
+- Ridge Regression
+- Lasso Regression
+- Decision Tree
+- Random Forest
+- Support Vector Regression (RBF)
+- K-Nearest Neighbours
+- LightGBM and XGBoost when those optional packages are available
+
+There is no separate basic/advanced mode.
+
+### Safe polynomial experiments
+
+Polynomial expansion grows very quickly when degree and feature count are both
+increased. Before fitting, the playground calculates the expanded term count.
+Unsafe combinations are blocked with a suggestion to reduce the degree or
+number of features. High polynomial degrees are intended for one-feature
+underfitting/overfitting experiments; multivariable experiments use conservative
+limits. Polynomial terms are labelled with their feature names rather than
+anonymous term numbers.
 
 ---
 
 ## Datasets
 
-Feature Lab and Model Arena share a dataset picker:
+| Dataset | Main use in the playground |
+|---|---|
+| **Synthetic sandbox** | noise, outliers, assumptions, polynomial complexity and controlled comparisons |
+| **Anscombe's Quartet** | why a scatter plot matters even when summary statistics look similar |
+| **FuelConsumption CO₂** | the Session 2 class activity: simple/multiple regression and feature choice |
+| **Energy Efficiency (ENB2012)** | multiple regression, polynomial terms, scaling and regularisation |
+| **Wine Quality (red)** | a larger multivariable comparison |
+| **Diabetes** | a bundled scikit-learn regression example |
+| **Startup Profit** | business-feature regression and coefficient interpretation |
+| **Student wellbeing** | discussion of association, prediction and the limits of causal claims |
 
-- **FuelConsumption CO₂** — the Session 2 class-activity dataset (`ENGINESIZE`,
-  `CYLINDERS`, `FUELCONSUMPTION_*` → `CO2EMISSIONS`).
-- **Energy Efficiency (ENB2012)** — 8 building features → Heating Load.
-- **Wine Quality (red)** — 11 physico-chemical features → quality.
-- **Diabetes** — 10 features → disease progression (scikit-learn, bundled).
-- **Startup Profit** — R&D / Admin / Marketing spend → Profit.
-- **Student wellbeing** — usage, sleep, mental-health → addiction score.
-
-Model Arena also offers a **Synthetic sandbox** (one feature) so you can see each
-model's fitted curve directly. Fit the Line, Gradient Descent and the complexity
-demo use their own synthetic data (plus **Anscombe's Quartet** in Fit the Line).
-
----
-
-## Teaching guarantees (baked in)
-
-- Fixed `random_state = 42`; the train/test split is **locked** when comparing models.
-- Scaling/polynomial features are fitted **inside a pipeline on the training split
-  only** — no data leakage.
-- A **mean-prediction baseline** is always available, and **R² is allowed to go
-  negative** (worse than the mean).
-- Diagnostics are framed as visual evidence, not pass/fail tests.
-- No universal "best model" is declared; a coefficient is an association, not a cause.
+The data loaders resolve files from the repository, so the app does not depend
+on the terminal's current folder or download data at launch.
 
 ---
 
-## A 60–75 minute class flow
+## Teaching safeguards
 
-1. Fit a line by hand, then reveal least squares.
-2. Watch gradient descent find the same line; try too-small / just-right / too-big α.
-3. Feature Lab: build the best model with ≤3 features, then reveal the ranking.
-4. Model Arena: a flexible model vs a simple one — who wins on the test set?
-5. Overfitting: predict which polynomial degree overfits, then check with CV.
-6. Tune Ridge / Lasso; watch coefficients shrink and zero out.
-7. Exit question: *what would you change in the data, features, or model — and why?*
-   Log results and download the experiment history as evidence.
+- Reproducible examples use `random_state=42` by default.
+- Compared models use the same observations and split.
+- Scaling and polynomial expansion are fitted inside a pipeline on training
+  folds only.
+- A mean-prediction baseline is available, and R² is allowed to be negative
+  when a model performs worse than that baseline.
+- MAE and RMSE retain target units; MSE is identified as using squared units.
+- Repeated model/feature selection uses training-only cross-validation.
+- Coefficients are described as conditional associations, not causes.
+- Assumption displays are described as **visual clues**, not automatic
+  pass/fail tests.
+- Train, validation/test and CV series use both colour and distinct
+  markers/line styles.
 
 ---
 
-## How it's organised (easy to modify)
+## Suggested 60–75 minute class route
 
+1. **Fit the Line:** fit by eye and predict what least squares will change.
+2. **Gradient Descent:** compare learning-rate curves on linear, curved and deliberately difficult data, then inspect `θ₀` and `θ₁` at a chosen iteration.
+3. **Feature Lab:** build a CO₂ model using no more than three features and lock
+   the feature choice.
+4. **Model Arena:** compare a baseline/simple model with a more flexible model;
+   choose before revealing the held-out result.
+5. **Generalisation & Regularisation:** spot an overfit polynomial and use
+   Ridge/Lasso to control complexity.
+6. **Diagnose:** identify one residual pattern and finish with:
+   *What would you change in the data, features or model—and why?*
+
+For a shorter session, Gradient Descent or the coefficient-path portion can be
+an instructor-led demonstration.
+
+---
+
+## Launch with `mlcourse`
+
+From the repository root:
+
+```bash
+conda run -n mlcourse streamlit run \
+  Course_Sessions/Week_1/regression_playground/app.py
 ```
+
+Or activate the environment first:
+
+```bash
+conda activate mlcourse
+cd Course_Sessions/Week_1/regression_playground
+streamlit run app.py
+```
+
+Streamlit normally opens `http://localhost:8501`. Stop the server with
+`Ctrl+C`. The playground does not need a webcam, model weights, a GPU, or an
+internet connection.
+
+---
+
+## Verification
+
+From this folder, run the modelling and Streamlit interaction tests with:
+
+```bash
+conda run -n mlcourse python -m pytest -q
+```
+
+The suite checks the locked-split/CV rules, metrics, polynomial safety, encoded
+Energy features, all diagnostic scenarios, every workspace and the staged
+reveal paths.
+
+---
+
+## Project structure
+
+```text
 regression_playground/
-├── app.py               # Streamlit UI (six workspaces)
-├── regression_utils.py  # datasets, pipelines, metrics, gradient descent, CV  <- edit to extend
-├── theme.py             # slide palette + CSS + Plotly styling  <- edit to rebrand
-├── requirements.txt
+├── app.py               # Streamlit UI and the six workspaces
+├── regression_utils.py  # datasets, pipelines, metrics, CV and diagnostics
+├── theme.py             # accessible UI palette, CSS and Plotly styling
+├── requirements.txt     # direct runtime dependencies
+├── tests/                # modelling and Streamlit interaction checks
 ├── README.md
-└── .streamlit/config.toml
+└── .streamlit/
+    └── config.toml
 ```
 
-Add a dataset in `regression_utils.py`; change a colour in `theme.py`.
+Add or adjust datasets and modelling logic in `regression_utils.py`; keep visual
+tokens and shared chart styling in `theme.py`.
