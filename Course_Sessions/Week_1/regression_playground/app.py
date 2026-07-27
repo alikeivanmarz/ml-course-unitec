@@ -104,11 +104,6 @@ def metric_cards(metrics: dict, prefix: str) -> None:
         c.metric(label, txt, help=METRIC_HELP[key])
 
 
-def reveal(label: str):
-    """A click-to-open box so students can predict before seeing the answer."""
-    return st.expander(label, expanded=False)
-
-
 def scatter_line_fig(x, y, lines: list[dict], height=380,
                      xtitle="x", ytitle="y", residual_from=None):
     """Scatter of (x,y) plus any number of overlaid lines.
@@ -167,96 +162,111 @@ def log_experiment(row: dict) -> None:
 # ===========================================================================
 # Tab 1 - Fit the Line
 # ===========================================================================
+# Single-feature real examples: label -> (dataset name, x column, y column)
+FL_EXAMPLES = {
+    "Engine size → CO₂": ("FuelConsumption CO2", "ENGINESIZE", "CO2EMISSIONS"),
+    "Fuel use → CO₂": ("FuelConsumption CO2", "FUELCONSUMPTION_COMB", "CO2EMISSIONS"),
+    "R&D spend → Profit": ("Startup Profit", "R&D Spend", "Profit"),
+    "Social-media use → Addiction": ("Student wellbeing", "Avg_Daily_Usage_Hours", "Addicted_Score"),
+    "Alcohol → Wine quality": ("Wine Quality (red)", "alcohol", "quality"),
+}
+
+
+@st.cache_data(show_spinner=False)
+def fl_example_xy(label: str, max_points: int = 150):
+    """Return (x, y) for a real single-feature example, sampled for a clean scatter."""
+    name, xcol, ycol = FL_EXAMPLES[label]
+    df = ru.get_named_dataset(name)[0][[xcol, ycol]].dropna()
+    if len(df) > max_points:
+        df = df.sample(max_points, random_state=ru.RANDOM_STATE)
+    return df[xcol].to_numpy(float), df[ycol].to_numpy(float), xcol, ycol
+
+
 def tab_fit_line():
     theme.header("Fit the Line", "Fit a line by hand, then compare with least squares")
-    theme.challenge("Move the sliders to fit the line, then reveal the best-fit line.")
-
+    theme.challenge("Move the sliders to raise your R², then reveal the best-fit line.")
     st.latex(r"\hat{y} = \theta_0 + \theta_1\,x")
 
     c1, c2 = st.columns([1, 2], gap="large")
     with c1:
-        source = st.radio("Choose your data",
-                          ["Practice data (you control it)", "Famous demo (Anscombe)"],
-                          key="fl_src")
-        if source.startswith("Practice"):
+        choice = st.selectbox(
+            "Example", ["Practice data (make your own)", *FL_EXAMPLES,
+                        "Anscombe's Quartet"], key="fl_choice")
+        xlabel, ylabel = "x", "y"
+        if choice.startswith("Practice"):
             n = st.slider("How many dots", 10, 200, 40, key="fl_n")
             noise = st.slider("How scattered (noise)", 0.0, 20.0, 6.0, 0.5, key="fl_noise")
-            seed = st.number_input("Shuffle (seed)", 0, 9999, 42, key="fl_seed",
-                                   help="Change this to get a different random scatter.")
+            seed = st.number_input("Shuffle (seed)", 0, 9999, 42, key="fl_seed")
             df = ru.make_synthetic(n=n, noise=noise, seed=int(seed))
-            add_outlier = st.checkbox("Add one odd point (outlier)", key="fl_out")
-            if add_outlier:
+            if st.checkbox("Add one odd point (outlier)", key="fl_out"):
                 df = pd.concat([df, pd.DataFrame({"x": [df["x"].max()],
                                                   "y": [df["y"].min() - 3 * noise - 10]})],
                                ignore_index=True)
-        else:
+            x, y = df["x"].to_numpy(), df["y"].to_numpy()
+        elif choice == "Anscombe's Quartet":
             which = st.selectbox("Which of the four sets", ["I", "II", "III", "IV"],
                                  key="fl_ans")
             df = ru.make_anscombe(which)
-            st.markdown('<span class="rp-note">The four "Anscombe" sets are a famous demo: '
-                        'they have almost identical statistics but look completely different '
-                        'once you plot them.</span>', unsafe_allow_html=True)
+            x, y = df["x"].to_numpy(), df["y"].to_numpy()
+            st.markdown('<span class="rp-note">Four sets with near-identical statistics '
+                        'that look completely different once plotted.</span>',
+                        unsafe_allow_html=True)
+        else:
+            x, y, xlabel, ylabel = fl_example_xy(choice)
 
-        x, y = df["x"].to_numpy(), df["y"].to_numpy()
         ols_slope, ols_intercept = ru.ols_1d(x, y)
+        # Adaptive ranges so real-unit data (e.g. CO2) is reachable; keyed per
+        # example so switching resets the sliders (avoids out-of-range errors).
+        s_hi = max(abs(ols_slope) * 3.0, 1.0)
         span = float(y.max() - y.min()) or 1.0
-        slope = st.slider("Slope (how steep the line is)", -5.0, 5.0, 1.0, 0.05,
-                          key="fl_slope", help="Called theta-one in the equation.")
-        # Fixed range so a stored value can never fall outside the bounds when the
-        # underlying data changes (which would raise a Streamlit slider error).
-        intercept = st.slider("Intercept (where the line starts)", -60.0, 60.0,
-                              float(np.clip(y.mean(), -60, 60)), 0.1, key="fl_intercept",
-                              help="Where the line crosses the vertical axis. "
-                                   "Called theta-zero in the equation.")
+        i_lo, i_hi = float(y.min() - span), float(y.max() + span)
+        slope = st.slider("Slope (steepness)", -s_hi, s_hi, 0.0, step=s_hi / 100,
+                          key=f"fl_slope_{choice}", help="θ₁ in the equation.")
+        intercept = st.slider("Intercept (where it starts)", i_lo, i_hi,
+                              float(np.clip(y.mean(), i_lo, i_hi)), step=span / 100,
+                              key=f"fl_intercept_{choice}", help="θ₀ in the equation.")
 
     with c2:
-        student_sse, student_mse = ru.sse_mse(x, y, slope, intercept)
+        student = ru.all_metrics(y, intercept + slope * x)
+        ols_r2 = ru.all_metrics(y, ols_intercept + ols_slope * x)["R2"]
+        show_best = st.checkbox("Show the best-fit line", key="fl_show_best",
+                                help="Fit by eye first, then tick this to compare.")
         lines = [{"slope": slope, "intercept": intercept, "name": "your line",
                   "color": theme.MODEL}]
-        show_ols = reveal("Reveal the best-fit line")
-        with show_ols:
+        if show_best:
             lines.append({"slope": ols_slope, "intercept": ols_intercept,
                           "name": "best-fit line", "color": theme.GOOD})
-            ols_sse, ols_mse = ru.sse_mse(x, y, ols_slope, ols_intercept)
-            matched = abs(student_mse - ols_mse) < 0.01 * ols_mse + 1e-9
-            st.markdown(
-                f"The best-fit line has slope **{ols_slope:.3f}** and intercept "
-                f"**{ols_intercept:.3f}**, giving an average error of **{ols_mse:.2f}**. "
-                f"Your line's average error is **{student_mse:.2f}** — "
-                f"{'you matched it!' if matched else f'about {student_mse/ols_mse:.1f} times larger.'}"
-            )
-            resid = np.abs(y - (ols_intercept + ols_slope * x))
-            k = int(np.argmax(resid))
-            st.markdown(f'<span class="rp-note">The dot furthest from the line '
-                        f'(x={x[k]:.2f}, y={y[k]:.2f}) pulls it the hardest.</span>',
-                        unsafe_allow_html=True)
 
-        fig = scatter_line_fig(x, y, lines,
+        fig = scatter_line_fig(x, y, lines, xtitle=xlabel, ytitle=ylabel,
                                residual_from={"slope": slope, "intercept": intercept,
                                               "color": theme.ERROR})
         st.plotly_chart(fig, use_container_width=True, key="fl_fig",
                         config={"displayModeBar": False})
         st.caption("Red dotted lines are the errors — make them small overall.")
+        if show_best:
+            st.markdown(
+                f"Best-fit line: slope **{ols_slope:.3g}**, intercept **{ols_intercept:.3g}**, "
+                f"**R² {ols_r2:.3f}** — the highest possible for a straight line. "
+                f"Your R² is **{student['R2']:.3f}**.")
 
         m1, m2, m3 = st.columns(3)
-        m1.metric("Your total error", f"{student_sse:,.1f}",
-                  help="Sum of the squared gaps (SSE). Lower is better.")
-        m2.metric("Your average error", f"{student_mse:,.2f}",
-                  help="Mean squared error (MSE) — the total shared over all dots.")
-        m3.metric("Best-fit average error", f"{ru.sse_mse(x, y, ols_slope, ols_intercept)[1]:,.2f}",
-                  help="The smallest average error possible for a straight line.")
+        m1.metric("Your R²", f"{student['R2']:.3f}",
+                  help="1 = perfect · 0 = no better than a flat line at the mean · "
+                       "can be negative")
+        m2.metric("Your RMSE", f"{student['RMSE']:,.2f}", help=f"typical error, in {ylabel}")
+        m3.metric("Your MAE", f"{student['MAE']:,.2f}")
 
         pc1, pc2 = st.columns([2, 1])
-        px_val = pc1.slider("Predict the output when the input =",
-                            float(x.min()), float(x.max()),
-                            float(np.median(x)), key=f"fl_predx_{source}")
+        px_val = pc1.slider(f"Predict {ylabel} when {xlabel} =",
+                            float(x.min()), float(x.max()), float(np.median(x)),
+                            key=f"fl_predx_{choice}")
         pc2.metric("Your line predicts", f"{intercept + slope * px_val:.2f}")
 
         if st.button("Log this attempt", key="fl_log"):
-            log_experiment({"tab": "Fit the Line", "slope": round(slope, 3),
-                            "intercept": round(intercept, 3),
-                            "your_MSE": round(student_mse, 3),
-                            "OLS_MSE": round(ru.sse_mse(x, y, ols_slope, ols_intercept)[1], 3)})
+            log_experiment({"tab": "Fit the Line", "example": choice,
+                            "slope": round(slope, 3), "intercept": round(intercept, 3),
+                            "your_R2": round(student["R2"], 3),
+                            "best_R2": round(ols_r2, 3)})
             st.success("Logged to experiment history.")
 
 
