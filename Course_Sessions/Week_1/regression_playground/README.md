@@ -15,23 +15,20 @@ notation (`theta`, `alpha`, `J(theta)`).
 
 | Tab | What students do | Concepts |
 |---|---|---|
-| **Fit the Line** | Drag slope/intercept to minimise error by hand, then reveal OLS | line of best fit, residuals, SSE/MSE, least squares |
-| **Gradient Descent** | Watch the machine find the same line by walking downhill | cost `J(theta)`, learning rate, convergence vs divergence |
-| **Metrics Under Pressure** | Inject an outlier, see which metric moves most | MAE · MSE · RMSE · R² · MAPE, robustness, negative R² |
-| **Feature Lab** | Explore FuelConsumption CO₂, find the best ≤3-feature model | correlation, single vs multiple regression, coefficient interpretation |
+| **Fit the Line** | Fit a line by hand, then reveal least squares | line of best fit, residuals, SSE/MSE |
+| **Gradient Descent** | Watch the machine find the same line by walking downhill | cost `J(θ)`, learning rate α, convergence vs divergence |
+| **Feature Lab** | Pick a dataset, find the best ≤3-feature model | correlation, single vs multiple regression, coefficient interpretation |
 | **Model Arena** | Pick a dataset + two models; see the data with each model's fit, then compare | train vs test, generalisation, feature importance |
 | **Overfitting & Regularisation** | Push polynomial degree, then tame it with Ridge/Lasso | bias–variance, cross-validation, L1/L2, coefficient paths |
 
-Two modes (sidebar): **Guided Lab** hides answers behind *Reveal* buttons so
-students predict first; **Open Playground** shows everything for free exploration.
+The *Reveal* boxes stay collapsed so students can predict before seeing the answer.
 
-**Models available in Model Arena:** Mean baseline, Linear, Polynomial, Ridge,
-Lasso, Decision Tree, Random Forest, SVM (RBF), K-Nearest Neighbours, and
-LightGBM / XGBoost when installed. With a single feature selected you see each
-model's fitted curve drawn straight onto the data scatter (a straight line, a
-smooth curve, or a tree's step-like fit); with several features you get
-predicted-vs-actual plus feature-importance bars. All equations render as proper
-maths (θ, α, `J(θ)`), not plain text.
+**Models (Model Arena):** Mean baseline, Linear, Polynomial, Ridge, Lasso,
+Decision Tree, Random Forest, SVM (RBF), K-Nearest Neighbours, and LightGBM /
+XGBoost when installed. With one feature selected you see each model's fitted
+curve on the data scatter (line, smooth curve, or a tree's step-like fit); with
+several features you get predicted-vs-actual plus feature-importance bars. All
+equations render as proper maths (θ, α, `J(θ)`).
 
 ---
 
@@ -58,13 +55,19 @@ No conda? Any Python 3.10+ environment works — `pip install -r requirements.tx
 
 ## Datasets
 
-- **Synthetic sandbox** — controllable noise/curvature; used for fitting, gradient
-  descent, metrics and overfitting (no files needed).
+Feature Lab and Model Arena share a dataset picker:
+
 - **FuelConsumption CO₂** — the Session 2 class-activity dataset (`ENGINESIZE`,
-  `CYLINDERS`, `FUELCONSUMPTION_*` → `CO2EMISSIONS`), read from `../../../Datasets/`.
+  `CYLINDERS`, `FUELCONSUMPTION_*` → `CO2EMISSIONS`).
 - **Energy Efficiency (ENB2012)** — 8 building features → Heating Load.
-- **Anscombe's Quartet** — four datasets with near-identical statistics but very
-  different shapes (built in).
+- **Wine Quality (red)** — 11 physico-chemical features → quality.
+- **Diabetes** — 10 features → disease progression (scikit-learn, bundled).
+- **Startup Profit** — R&D / Admin / Marketing spend → Profit.
+- **Student wellbeing** — usage, sleep, mental-health → addiction score.
+
+Model Arena also offers a **Synthetic sandbox** (one feature) so you can see each
+model's fitted curve directly. Fit the Line, Gradient Descent and the complexity
+demo use their own synthetic data (plus **Anscombe's Quartet** in Fit the Line).
 
 ---
 
@@ -82,14 +85,13 @@ No conda? Any Python 3.10+ environment works — `pip install -r requirements.tx
 
 ## A 60–75 minute class flow
 
-1. Fit a line by hand, then reveal OLS.
+1. Fit a line by hand, then reveal least squares.
 2. Watch gradient descent find the same line; try too-small / just-right / too-big α.
-3. Inject an outlier — compare MAE with RMSE.
-4. Feature Lab: build the best CO₂ model with ≤3 features, then reveal the ranking.
-5. Model Arena: a flexible model vs a simple one — who wins on the test set?
-6. Overfitting: predict which polynomial degree overfits, then check with CV.
-7. Tune Ridge / Lasso; watch coefficients shrink and zero out.
-8. Exit question: *what would you change in the data, features, or model — and why?*
+3. Feature Lab: build the best model with ≤3 features, then reveal the ranking.
+4. Model Arena: a flexible model vs a simple one — who wins on the test set?
+5. Overfitting: predict which polynomial degree overfits, then check with CV.
+6. Tune Ridge / Lasso; watch coefficients shrink and zero out.
+7. Exit question: *what would you change in the data, features, or model — and why?*
    Log results and download the experiment history as evidence.
 
 ---

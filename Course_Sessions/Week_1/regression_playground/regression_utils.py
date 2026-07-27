@@ -97,6 +97,57 @@ ENERGY_FEATURES = ["Relative Compactness", "Surface Area", "Wall Area",
 ENERGY_TARGET = "Heating Load"
 
 
+def _load_wine():
+    df = pd.read_csv(DATASETS_DIR / "winequality-red.csv", sep=";")
+    return df, [c for c in df.columns if c != "quality"], "quality"
+
+
+def _load_diabetes():
+    from sklearn.datasets import load_diabetes
+    d = load_diabetes(as_frame=True)
+    return d.frame, list(d.feature_names), "target"
+
+
+def _load_startup():
+    df = pd.read_csv(DATASETS_DIR / "1000_Companies.csv")
+    return df, ["R&D Spend", "Administration", "Marketing Spend"], "Profit"
+
+
+def _load_students():
+    df = pd.read_csv(DATASETS_DIR / "Students Social Media Addiction.csv")
+    feats = ["Age", "Avg_Daily_Usage_Hours", "Sleep_Hours_Per_Night",
+             "Mental_Health_Score", "Conflicts_Over_Social_Media"]
+    return df, feats, "Addicted_Score"
+
+
+def get_named_dataset(name: str):
+    """Return (df, feature_names, target) for a named dataset."""
+    if name == "FuelConsumption CO2":
+        return load_fuel_consumption(), FUEL_FEATURES, FUEL_TARGET
+    if name == "Energy Efficiency":
+        return load_energy_efficiency(), ENERGY_FEATURES, ENERGY_TARGET
+    if name == "Wine Quality (red)":
+        return _load_wine()
+    if name == "Diabetes":
+        return _load_diabetes()
+    if name == "Startup Profit":
+        return _load_startup()
+    if name == "Student wellbeing":
+        return _load_students()
+    if name == "Synthetic sandbox":
+        df = make_synthetic(n=120, noise=12, curvature=0.4)
+        return df, ["x"], "y"
+    raise ValueError(f"Unknown dataset: {name}")
+
+
+# Datasets with several numeric features (for Feature Lab).
+MULTI_FEATURE_DATASETS = ["FuelConsumption CO2", "Energy Efficiency",
+                          "Wine Quality (red)", "Diabetes", "Startup Profit",
+                          "Student wellbeing"]
+# Model Arena also offers the single-feature synthetic sandbox.
+ARENA_DATASETS = MULTI_FEATURE_DATASETS + ["Synthetic sandbox"]
+
+
 # ===========================================================================
 # Metrics
 # ===========================================================================

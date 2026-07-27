@@ -55,19 +55,15 @@ CORR_SCALE = [[0.0, "#2C4E79"], [0.25, "#A8BFD6"], [0.5, "#EDE8DA"],
 # Cached loaders
 # ---------------------------------------------------------------------------
 @st.cache_data(show_spinner=False)
-def load_fuel() -> pd.DataFrame:
-    return ru.load_fuel_consumption()
+def get_dataset(name: str):
+    """Return (df, features, target) for a named dataset (cached)."""
+    return ru.get_named_dataset(name)
 
 
 @st.cache_data(show_spinner=False)
-def load_energy() -> pd.DataFrame:
-    return ru.load_energy_efficiency()
-
-
-@st.cache_data(show_spinner=False)
-def cached_combo_ranking(features_key: tuple, max_k: int) -> pd.DataFrame:
-    df = load_fuel()
-    return ru.rank_feature_combos(df, list(features_key), ru.FUEL_TARGET, max_k=max_k)
+def cached_combo_ranking(ds_name: str, max_k: int) -> pd.DataFrame:
+    df, feats, target = get_dataset(ds_name)
+    return ru.rank_feature_combos(df, feats, target, max_k=max_k)
 
 
 @st.cache_data(show_spinner=False)
@@ -86,21 +82,8 @@ def cached_degree_sweep(n: int, noise: float):
 
 @st.cache_data(show_spinner=False)
 def cached_coef_path(ds_name: str, model: str) -> pd.DataFrame:
-    df, feats, target = get_multi_dataset(ds_name)
+    df, feats, target = get_dataset(ds_name)
     return ru.coefficient_path(df, feats, target, model=model)
-
-
-def get_multi_dataset(name: str):
-    """Return (df, features, target) for the multi-dataset workspaces."""
-    if name == "FuelConsumption CO2":
-        return load_fuel(), ru.FUEL_FEATURES, ru.FUEL_TARGET
-    if name == "Energy Efficiency":
-        return load_energy(), ru.ENERGY_FEATURES, ru.ENERGY_TARGET
-    df = ru.make_synthetic(n=120, noise=10, curvature=0.4)
-    return df, ["x"], "y"
-
-
-MULTI_DATASETS = ["FuelConsumption CO2", "Energy Efficiency", "Synthetic sandbox"]
 
 
 # ---------------------------------------------------------------------------
@@ -121,9 +104,9 @@ def metric_cards(metrics: dict, prefix: str) -> None:
         c.metric(label, txt, help=METRIC_HELP[key])
 
 
-def reveal(label: str, guided: bool):
-    """An expander that starts collapsed in Guided mode, open in Playground."""
-    return st.expander(label, expanded=not guided)
+def reveal(label: str):
+    """A click-to-open box so students can predict before seeing the answer."""
+    return st.expander(label, expanded=False)
 
 
 def scatter_line_fig(x, y, lines: list[dict], height=380,
@@ -184,16 +167,11 @@ def log_experiment(row: dict) -> None:
 # ===========================================================================
 # Tab 1 - Fit the Line
 # ===========================================================================
-def tab_fit_line(guided: bool):
-    theme.header("Fit the Line",
-                 "Move the line by hand to make the errors small, then reveal the best-fit line")
-    st.caption("This tab uses a simple dataset with one input and one output, so you can "
-               "see a single straight line. Pick your data on the left.")
-    theme.challenge("Move the two sliders so the line goes through the middle of the dots. "
-                    "Then reveal the computer's best-fit line and compare.")
+def tab_fit_line():
+    theme.header("Fit the Line", "Fit a line by hand, then compare with least squares")
+    theme.challenge("Move the sliders to fit the line, then reveal the best-fit line.")
 
-    st.latex(r"\hat{y} = \theta_0 + \theta_1\,x \qquad\text{(intercept } \theta_0"
-             r"\text{, slope } \theta_1\text{)}")
+    st.latex(r"\hat{y} = \theta_0 + \theta_1\,x")
 
     c1, c2 = st.columns([1, 2], gap="large")
     with c1:
@@ -235,7 +213,7 @@ def tab_fit_line(guided: bool):
         student_sse, student_mse = ru.sse_mse(x, y, slope, intercept)
         lines = [{"slope": slope, "intercept": intercept, "name": "your line",
                   "color": theme.MODEL}]
-        show_ols = reveal("Reveal the best-fit line (the computer's exact answer)", guided)
+        show_ols = reveal("Reveal the best-fit line")
         with show_ols:
             lines.append({"slope": ols_slope, "intercept": ols_intercept,
                           "name": "best-fit line", "color": theme.GOOD})
@@ -258,8 +236,7 @@ def tab_fit_line(guided: bool):
                                               "color": theme.ERROR})
         st.plotly_chart(fig, use_container_width=True, key="fl_fig",
                         config={"displayModeBar": False})
-        st.caption("The red dotted lines are the errors: the gap from each dot up or down "
-                   "to your line. The goal is to make them as small as possible overall.")
+        st.caption("Red dotted lines are the errors — make them small overall.")
 
         m1, m2, m3 = st.columns(3)
         m1.metric("Your total error", f"{student_sse:,.1f}",
@@ -286,13 +263,9 @@ def tab_fit_line(guided: bool):
 # ===========================================================================
 # Tab 2 - Gradient Descent
 # ===========================================================================
-def tab_gradient_descent(guided: bool):
-    theme.header("Gradient Descent",
-                 "The same line - but now the machine finds it by walking downhill on the cost")
-    st.caption("Uses made-up practice data (set the amount and scatter below). The computer "
-               "starts from a random line and improves it step by step.")
-    theme.challenge("Predict what happens with a tiny, a good, and a huge learning rate α. "
-                    "Then run each and watch the cost curve.")
+def tab_gradient_descent():
+    theme.header("Gradient Descent", "How the machine finds the line by minimising cost")
+    theme.challenge("Try a tiny, a good, and a huge learning rate α. Watch the cost curve.")
     lc, rc = st.columns(2)
     with lc:
         st.markdown("**Update rule** (take a step downhill):")
@@ -361,101 +334,15 @@ def tab_gradient_descent(guided: bool):
 
 
 # ===========================================================================
-# Tab 3 - Metrics Under Pressure
-# ===========================================================================
-def tab_metrics(guided: bool):
-    theme.header("Metrics Under Pressure",
-                 "Same predictions, different lenses - and what one outlier does to each metric")
-    st.caption("Uses made-up practice data. We fit the best line for you, then you can add "
-               "one bad point and watch how each error score reacts.")
-    theme.challenge("Inject one extreme error. Predict which metric will move the most, "
-                    "then check. (Hint: think about squaring.)")
-
-    with st.expander("Show the formulas", expanded=False):
-        fc1, fc2 = st.columns(2)
-        with fc1:
-            st.latex(r"\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\lvert y_i - \hat{y}_i\rvert")
-            st.latex(r"\mathrm{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2")
-            st.latex(r"\mathrm{RMSE} = \sqrt{\mathrm{MSE}}")
-        with fc2:
-            st.latex(r"R^2 = 1 - \frac{\sum_i (y_i-\hat{y}_i)^2}{\sum_i (y_i-\bar{y})^2}")
-            st.latex(r"\mathrm{MAPE} = \frac{100}{n}\sum_{i=1}^{n}"
-                     r"\left\lvert\frac{y_i-\hat{y}_i}{y_i}\right\rvert")
-
-    c1, c2 = st.columns([1, 2], gap="large")
-    with c1:
-        n = st.slider("Points", 20, 200, 60, key="mt_n")
-        noise = st.slider("Noise", 1.0, 20.0, 7.0, 0.5, key="mt_noise")
-        df = ru.make_synthetic(n=n, noise=noise)
-        x, y = df["x"].to_numpy(), df["y"].to_numpy()
-        slope, intercept = ru.ols_1d(x, y)
-        pred = intercept + slope * x
-        inject = st.checkbox("Inject one extreme error", key="mt_inject")
-        strength = st.slider("Outlier strength", 1.0, 8.0, 4.0, 0.5, key="mt_strength",
-                             disabled=not inject)
-
-    y_dirty = y.copy()
-    if inject:
-        k = int(np.argmax(np.abs(x - np.median(x))))  # a point out on the edge
-        y_dirty[k] = y[k] + strength * (y.max() - y.min())
-
-    base = ru.all_metrics(y, pred)
-    dirty = ru.all_metrics(y_dirty, pred)
-    mean_pred = np.full_like(y, y.mean())
-    baseline = ru.all_metrics(y_dirty, mean_pred)
-
-    with c2:
-        st.markdown("**Metrics on the clean data**")
-        metric_cards(base, "clean")
-        if inject:
-            st.markdown("**After injecting the outlier** (change vs clean)")
-            cols = st.columns(5)
-            for col, key in zip(cols, ["MAE", "MSE", "RMSE", "R2", "MAPE"]):
-                v, b = dirty[key], base[key]
-                if key == "MAPE" and (v != v or b != b):
-                    col.metric(key, "n/a")
-                    continue
-                delta = v - b
-                label = "R²" if key == "R2" else key
-                txt = f"{v:.3f}" if key == "R2" else f"{v:,.2f}"
-                col.metric(label, txt, delta=f"{delta:+,.2f}",
-                           delta_color="inverse" if key != "R2" else "normal")
-            st.markdown('<span class="rp-note">MSE and RMSE jump the most because the '
-                        'error is squared; MAE barely moves. That is why MAE is called '
-                        'robust to outliers.</span>', unsafe_allow_html=True)
-
-        with reveal("Mean-prediction baseline and negative R-squared", guided):
-            st.markdown(
-                f"If the model just predicted the mean every time, R-squared would be "
-                f"**0** by definition. Here the mean baseline scores R-squared = "
-                f"**{baseline['R2']:.3f}**. A value **below 0** means a model is doing "
-                f"*worse than guessing the mean*."
-            )
-
-    # error contribution chart
-    contrib = (y_dirty - pred) ** 2
-    order = np.argsort(contrib)[::-1][:12]
-    fig = go.Figure(go.Bar(x=[f"pt {i}" for i in order], y=contrib[order],
-                           marker_color=theme.PALETTE["error"]))
-    theme.style_fig(fig, height=260, title="Top squared-error contributors")
-    fig.update_yaxes(title="squared error")
-    st.plotly_chart(fig, use_container_width=True, key="mt_contrib",
-                    config={"displayModeBar": False})
-
-
-# ===========================================================================
 # Tab 4 - Feature Lab
 # ===========================================================================
-def tab_feature_lab(guided: bool):
-    theme.header("Feature Lab",
-                 "Explore FuelConsumption CO2 - which features actually drive the prediction")
-    st.caption("This activity uses the real FuelConsumption CO2 dataset (fixed for this "
-               "exercise): car engine details used to predict a car's CO2 emissions.")
-    theme.challenge("Build the best CO2 model you can using no more than three features. "
-                    "Commit your choice, then reveal the ranking of all combinations.")
-    df = load_fuel()
-    feats = ru.FUEL_FEATURES
-    target = ru.FUEL_TARGET
+def tab_feature_lab():
+    theme.header("Feature Lab", "Which features actually drive the prediction")
+    theme.challenge("Build the best model with three features or fewer, then reveal the ranking.")
+
+    ds = st.selectbox("Dataset", ru.MULTI_FEATURE_DATASETS, key="flab_ds")
+    df, feats, target = get_dataset(ds)
+    st.caption(f"{len(df):,} rows · predicting **{target}** from {len(feats)} features.")
 
     c1, c2 = st.columns([1, 1], gap="large")
     with c1:
@@ -468,7 +355,7 @@ def tab_feature_lab(guided: bool):
 
     with c2:
         chosen = st.multiselect("Features (choose 1 to 3)", feats,
-                                default=["ENGINESIZE"], key="flab_feats",
+                                default=[feats[0]], key=f"flab_feats_{ds}",
                                 max_selections=3)
         if not chosen:
             st.info("Select at least one feature.")
@@ -485,31 +372,29 @@ def tab_feature_lab(guided: bool):
                         config={"displayModeBar": False})
 
     # coefficients: raw vs standardised
-    st.markdown("**Coefficients - why raw values can mislead**")
+    st.markdown("**Coefficients: raw vs standardised**")
     raw = ru.fit_and_evaluate("Linear", df, chosen, target, scale=False)
     std = ru.fit_and_evaluate("Linear", df, chosen, target, scale=True)
     raw_c = ru.coefficients(raw["pipeline"], chosen)
     std_c = ru.coefficients(std["pipeline"], chosen)
     cc1, cc2 = st.columns(2)
     for col, dfc, title, colr, key in [
-        (cc1, raw_c, "Raw coefficients (different units)", theme.NEUTRAL, "flab_raw"),
-        (cc2, std_c, "Standardised coefficients (comparable)", theme.MODEL, "flab_std")]:
+        (cc1, raw_c, "Raw (different units)", theme.NEUTRAL, "flab_raw"),
+        (cc2, std_c, "Standardised (comparable)", theme.MODEL, "flab_std")]:
         fig = go.Figure(go.Bar(x=dfc["coefficient"], y=dfc["feature"], orientation="h",
                                marker_color=colr))
         theme.style_fig(fig, height=240, title=title)
         col.plotly_chart(fig, use_container_width=True, key=key,
                          config={"displayModeBar": False})
-    st.markdown('<span class="rp-note">Raw coefficients are not comparable when features '
-                'use different units. Standardised coefficients put them on the same scale. '
-                'A large coefficient is an association, not proof of causation.</span>',
+    st.markdown('<span class="rp-note">Raw coefficients aren\'t comparable across different '
+                'units; standardised ones are. Association is not causation.</span>',
                 unsafe_allow_html=True)
 
-    if st.button("Reveal ranking of all combinations (up to 3 features)", key="flab_reveal"):
-        ranking = cached_combo_ranking(tuple(feats), 3)
+    if st.button("Reveal best feature combination", key="flab_reveal"):
+        ranking = cached_combo_ranking(ds, 3)
         st.dataframe(ranking, use_container_width=True, hide_index=True)
         best = ranking.iloc[0]
-        st.success(f"Best by test R-squared: {best['features']} "
-                   f"(R² = {best['test_R2']}).")
+        st.success(f"Best (test R²): {best['features']} — R² {best['test_R2']}")
 
 
 # ===========================================================================
@@ -551,19 +436,16 @@ def _verdict(a_test, b_test, na, nb):
     return f"**{better}** generalises better (higher test R-squared) than {other} on this split."
 
 
-def tab_model_arena(guided: bool):
-    theme.header("Model Arena",
-                 "Pick a dataset and two models - see them fit the data, then who wins on unseen data")
-    theme.challenge("Put a flexible model (Random Forest, XGBoost) against a simple one "
-                    "(Linear). Does training-set skill translate to the test set?")
-    ds = st.selectbox("Dataset to compare on", MULTI_DATASETS, key="arena_ds",
-                      help="Pick which data both models are trained and tested on.")
-    df, feats, target = get_multi_dataset(ds)
+def tab_model_arena():
+    theme.header("Model Arena", "Compare two models on the same data")
+    theme.challenge("Put a flexible model against a simple one. Does train skill hold on the test set?")
+    ds = st.selectbox("Dataset", ru.ARENA_DATASETS, key="arena_ds")
+    df, feats, target = get_dataset(ds)
     st.caption(f"{len(df):,} rows · predicting **{target}** from up to {len(feats)} feature"
                f"{'s' if len(feats) != 1 else ''}.")
-    chosen = st.multiselect("Features to use", feats, default=[feats[0]], key="arena_feats",
-                            help="One feature shows the fitted curve on a scatter; "
-                                 "several build a full multi-feature model.")
+    chosen = st.multiselect("Features", feats, default=[feats[0]], key=f"arena_feats_{ds}",
+                            help="One feature draws the fitted curve; several build a "
+                                 "multi-feature model.")
     if not chosen:
         st.info("Pick at least one feature.")
         return
@@ -590,14 +472,11 @@ def tab_model_arena(guided: bool):
             xs, curve = ru.predict_curve(res["pipeline"], float(xv.min()), float(xv.max()))
             fig.add_trace(go.Scatter(x=xs, y=curve, mode="lines", name=name,
                                      line=dict(color=colr, width=3)))
-        theme.style_fig(fig, height=400,
-                        title=f"{target} vs {xcol} - the data with both fitted models")
+        theme.style_fig(fig, height=400, title=f"{target} vs {xcol}")
         fig.update_xaxes(title=xcol)
         fig.update_yaxes(title=target)
         st.plotly_chart(fig, use_container_width=True, key="arena_fit",
                         config={"displayModeBar": False})
-        st.caption("With one feature you can see each model's shape directly: a straight "
-                   "line, a smooth curve, or the step-like fit of a tree model.")
     else:
         vc1, vc2 = st.columns(2)
         vc1.plotly_chart(actual_vs_pred_fig(rA["y_test"], rA["pred_test"], 300, theme.MODEL),
@@ -635,13 +514,11 @@ def tab_model_arena(guided: bool):
             else:
                 col.caption(f"{name} does not expose a feature-importance measure.")
 
-    st.markdown("#### Verdict")
     st.info(_verdict(rA["test"], rB["test"], mA, mB))
     gap_a = rA["train"]["R2"] - rA["test"]["R2"]
     gap_b = rB["train"]["R2"] - rB["test"]["R2"]
-    st.markdown(f'<span class="rp-note">Train-minus-test R-squared gap - '
-                f'{mA}: {gap_a:+.3f} · {mB}: {gap_b:+.3f}. '
-                f'A large positive gap is a sign of overfitting.</span>',
+    st.markdown(f'<span class="rp-note">Train−test R² gap · {mA}: {gap_a:+.3f} · '
+                f'{mB}: {gap_b:+.3f}. A large gap signals overfitting.</span>',
                 unsafe_allow_html=True)
     if st.button("Log this comparison", key="arena_log"):
         log_experiment({"tab": "Model Arena", "dataset": ds,
@@ -653,17 +530,15 @@ def tab_model_arena(guided: bool):
 # ===========================================================================
 # Tab 6 - Overfitting & Regularisation
 # ===========================================================================
-def tab_overfitting(guided: bool):
+def tab_overfitting():
     theme.header("Overfitting & Regularisation",
-                 "Control complexity - then tame it with Ridge and Lasso")
+                 "Control complexity, then tame it with Ridge and Lasso")
 
     left, right = st.tabs(["Complexity (polynomial degree)", "Regularisation (Ridge / Lasso)"])
 
     # --- polynomial complexity ---
     with left:
-        st.caption("Uses made-up practice data with a gentle curve in it.")
-        theme.challenge("Which degree is too simple, about right, and too flexible? "
-                        "Predict before you look at the test error.")
+        theme.challenge("Which degree is too simple, about right, and too flexible?")
         n = st.slider("Points", 20, 150, 40, key="of_n")
         noise = st.slider("Noise", 1.0, 20.0, 8.0, 0.5, key="of_noise")
         df = ru.make_synthetic(n=n, noise=noise, curvature=0.6)
@@ -697,16 +572,13 @@ def tab_overfitting(guided: bool):
         st.plotly_chart(fig2, use_container_width=True, key="of_curves",
                         config={"displayModeBar": False})
         st.markdown('<span class="rp-note">Underfitting: both errors high. Overfitting: '
-                    'train keeps dropping while test turns back up. The sweet spot is the '
-                    'lowest test error.</span>', unsafe_allow_html=True)
+                    'train drops while test turns back up.</span>', unsafe_allow_html=True)
 
     # --- regularisation ---
     with right:
-        theme.challenge("Increase α until Lasso removes at least two features. "
-                        "Did test performance improve?")
-        ds = st.selectbox("Dataset", ["FuelConsumption CO2", "Energy Efficiency"],
-                          key="of_reg_ds")
-        df2, feats, target = get_multi_dataset(ds)
+        theme.challenge("Raise α until Lasso zeros out features. Does the test score improve?")
+        ds = st.selectbox("Dataset", ru.MULTI_FEATURE_DATASETS, key="of_reg_ds")
+        df2, feats, target = get_dataset(ds)
         model = st.radio("Model", ["Ridge", "Lasso"], key="of_reg_model", horizontal=True)
         exp = st.slider("log₁₀ α", -2.0, 3.0, 0.0, 0.25, key="of_reg_alpha",
                         help="Regularisation strength α on a log scale.")
@@ -730,70 +602,61 @@ def tab_overfitting(guided: bool):
         k3.metric("CV R² (5-fold)", f"{cv['mean']:.3f}")
         k4.metric("Coefficients at ~0", f"{zeroed} / {len(feats)}")
         st.markdown('<span class="rp-note">Ridge shrinks coefficients smoothly; Lasso can '
-                    'push them exactly to zero, which is a form of automatic feature '
-                    'selection. Cross-validation helps choose alpha.</span>',
+                    'push them to zero (automatic feature selection).</span>',
                     unsafe_allow_html=True)
 
 
 # ===========================================================================
 # Main
 # ===========================================================================
+def sidebar():
+    sb = st.sidebar
+    sb.markdown("### Regression Playground")
+    sb.caption("Week 1 · Session 2 — Regression")
+    sb.markdown(
+        '<div class="rp-note" style="line-height:1.9">'
+        '<span style="color:#1C3D5A">■</span> data &nbsp;&nbsp;'
+        '<span style="color:#A8622D">■</span> your line / model A<br>'
+        '<span style="color:#3E7063">■</span> best fit / target &nbsp;&nbsp;'
+        '<span style="color:#6B4E71">■</span> model B</div>',
+        unsafe_allow_html=True)
+    sb.divider()
+
+    hist = st.session_state.get("history", [])
+    sb.markdown(f"**Experiment log** ({len(hist)})")
+    if hist:
+        hdf = pd.DataFrame(hist)
+        sb.dataframe(hdf, use_container_width=True, hide_index=True, height=200)
+        sb.download_button("Download CSV", hdf.to_csv(index=False).encode(),
+                           "regression_experiments.csv", "text/csv", key="hist_dl")
+        if sb.button("Clear", key="hist_clear"):
+            st.session_state["history"] = []
+    else:
+        sb.caption("Log results from Fit the Line and Model Arena to collect them here.")
+    sb.divider()
+    sb.caption("Fixed split (random_state = 42). Scaling is fitted on the training data only.")
+
+
 def main():
     theme.inject_css()
-    st.sidebar.markdown("### Regression Playground")
-    mode = st.sidebar.radio("Teaching mode", ["Guided Lab", "Open Playground"],
-                            key="app_mode",
-                            help="Guided hides answers behind Reveal buttons; "
-                                 "Playground shows everything.")
-    guided = mode == "Guided Lab"
-    st.sidebar.markdown('<span class="rp-note">Week 1 · Session 2 · Regression Techniques '
-                        'and Model Evaluation</span>', unsafe_allow_html=True)
+    sidebar()
 
-    with st.sidebar.expander("How to use", expanded=False):
-        st.markdown(
-            "- Work left to right through the tabs.\n"
-            "- In **Guided Lab**, make a prediction before clicking Reveal.\n"
-            "- Everything uses a fixed split (`random_state=42`).\n"
-            "- Scaling is fitted on the training split only (no leakage).\n"
-            "- Log interesting results and download them below."
-        )
-
-    st.info("**Where do I pick the dataset?** Each tab has its own data control near the "
-            "top-left, because the tabs need different kinds of data. The first tabs use a "
-            "simple made-up dataset so you can see one line; **Feature Lab** uses the real "
-            "FuelConsumption data; **Model Arena** and **Regularisation** let you choose.")
-
-    tabs = st.tabs(["Fit the Line", "Gradient Descent", "Metrics Under Pressure",
-                    "Feature Lab", "Model Arena", "Overfitting & Regularisation"])
+    tabs = st.tabs(["Fit the Line", "Gradient Descent", "Feature Lab",
+                    "Model Arena", "Overfitting & Regularisation"])
     with tabs[0]:
-        tab_fit_line(guided)
+        tab_fit_line()
     with tabs[1]:
-        tab_gradient_descent(guided)
+        tab_gradient_descent()
     with tabs[2]:
-        tab_metrics(guided)
+        tab_feature_lab()
     with tabs[3]:
-        tab_feature_lab(guided)
+        tab_model_arena()
     with tabs[4]:
-        tab_model_arena(guided)
-    with tabs[5]:
-        tab_overfitting(guided)
-
-    # Experiment history
-    hist = st.session_state.get("history", [])
-    with st.sidebar.expander(f"Experiment history ({len(hist)})", expanded=False):
-        if hist:
-            hdf = pd.DataFrame(hist)
-            st.dataframe(hdf, use_container_width=True, hide_index=True)
-            st.download_button("Download CSV", hdf.to_csv(index=False).encode(),
-                               "regression_experiments.csv", "text/csv", key="hist_dl")
-            if st.button("Clear history", key="hist_clear"):
-                st.session_state["history"] = []
-        else:
-            st.caption("No experiments logged yet.")
+        tab_overfitting()
 
     st.markdown('<div class="rp-footer">Regression Playground · Unitec ML Course · '
-                'Week 1 Session 2 · notation θ / α / J(θ) follows the lecture '
-                'slides</div>', unsafe_allow_html=True)
+                'Week 1 · Session 2 · notation θ / α / J(θ)</div>',
+                unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
