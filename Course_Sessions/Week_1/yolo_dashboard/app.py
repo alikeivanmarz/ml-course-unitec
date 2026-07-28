@@ -1,8 +1,8 @@
 """
 YOLO Vision Lab  ·  Streamlit dashboard
 =======================================
-A professional, easy-to-modify dashboard for exploring and comparing YOLO
-models (Unitec ML Course, Week 1 bonus).
+A dashboard for exploring and comparing YOLO models
+(Unitec ML Course, Week 1 bonus).
 
 Run:
     streamlit run app.py
@@ -38,7 +38,6 @@ import yolo_utils as yu
 # ---------------------------------------------------------------------------
 st.set_page_config(
     page_title="YOLO Vision Lab",
-    page_icon="🛰️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -109,7 +108,7 @@ def header() -> None:
     st.markdown(
         """
         <div class="vl-header">
-            <p class="vl-title">🛰️ YOLO Vision Lab</p>
+            <p class="vl-title">YOLO Vision Lab</p>
             <div class="vl-sub">
                 <span class="vl-pill">REAL-TIME</span>
                 <span class="vl-pill">COMPARE MODELS</span>
@@ -214,7 +213,7 @@ def charts_and_table(df: pd.DataFrame, stats: dict, color=ACCENT, key: str = "")
     if not df.empty:
         st.dataframe(df, use_container_width=True, height=240, hide_index=True)
         st.download_button(
-            "⬇ Download detections (CSV)",
+            "Download detections (CSV)",
             df.to_csv(index=False).encode(),
             file_name="detections.csv",
             mime="text/csv",
@@ -228,12 +227,12 @@ def charts_and_table(df: pd.DataFrame, stats: dict, color=ACCENT, key: str = "")
 # Sidebar controls -> config dict
 # ---------------------------------------------------------------------------
 def sidebar_config() -> dict:
-    st.sidebar.markdown("### ⚙️ Controls")
+    st.sidebar.markdown("### Controls")
 
     mode = st.sidebar.radio(
-        "Mode", ["🎯 Single model", "⚖️ Compare two models"], index=0
+        "Mode", ["Single model", "Compare two models"], index=0
     )
-    compare = mode.startswith("⚖️")
+    compare = mode == "Compare two models"
 
     task = st.sidebar.selectbox("Task", list(yu.MODEL_REGISTRY.keys()), index=0)
     model_names = list(yu.models_for_task(task).keys())
@@ -249,16 +248,16 @@ def sidebar_config() -> dict:
     source = st.sidebar.radio(
         "Input source",
         [
-            "📷 Webcam (live)",
-            "📸 Webcam (snapshot)",
-            "🖼️ Image upload",
-            "🎬 Video upload",
-            "🧪 Sample image",
+            "Webcam (live)",
+            "Webcam (snapshot)",
+            "Image upload",
+            "Video upload",
+            "Sample image",
         ],
         index=0,
     )
 
-    st.sidebar.markdown("### 🎚️ Detection settings")
+    st.sidebar.markdown("### Detection settings")
     conf = st.sidebar.slider("Confidence", 0.05, 0.95, 0.25, 0.05)
     iou = st.sidebar.slider("IoU (NMS)", 0.10, 0.95, 0.45, 0.05)
     imgsz = st.sidebar.select_slider(
@@ -280,13 +279,13 @@ def sidebar_config() -> dict:
     classes = [name_to_idx[n] for n in sel_names] if sel_names else None
 
     track = st.sidebar.checkbox(
-        "🔀 Track objects across frames (assign IDs)",
+        "Track objects across frames (assign IDs)",
         value=False,
         help="Give each object a stable ID as it moves. Works with the Live and "
              "Video sources; ignored for single images.",
     )
 
-    with st.sidebar.expander("ℹ️ Help", expanded=False):
+    with st.sidebar.expander("Help", expanded=False):
         st.markdown(
             "- **Live** streams the webcam continuously.\n"
             "- **Snapshot** takes one photo — most reliable everywhere.\n"
@@ -354,18 +353,18 @@ def render_static_compare(image_bgr, cfg):
 
     col_a, col_b = st.columns(2, gap="large")
     with col_a:
-        st.markdown(f"#### 🅰️ {cfg['name_a']}")
+        st.markdown(f"#### {cfg['name_a']}")
         st.image(bgr_to_rgb(res_a.plot()), use_container_width=True)
         metric_row(st_a)
         charts_and_table(df_a, st_a, ACCENT, key="cmp_a")
     with col_b:
-        st.markdown(f"#### 🅱️ {cfg['name_b']}")
+        st.markdown(f"#### {cfg['name_b']}")
         st.image(bgr_to_rgb(res_b.plot()), use_container_width=True)
         metric_row(st_b)
         charts_and_table(df_b, st_b, ACCENT_ALT, key="cmp_b")
 
     # Head-to-head summary
-    st.markdown("#### ⚖️ Head-to-head")
+    st.markdown("#### Head-to-head")
     faster = cfg["name_a"] if lat_a <= lat_b else cfg["name_b"]
     speedup = (max(lat_a, lat_b) / min(lat_a, lat_b)) if min(lat_a, lat_b) > 0 else 1
     summary = pd.DataFrame(
@@ -378,7 +377,7 @@ def render_static_compare(image_bgr, cfg):
         }
     )
     st.dataframe(summary, use_container_width=True, hide_index=True)
-    st.success(f"⚡ **{faster}** was faster (~{speedup:.1f}× lower latency on this frame).")
+    st.success(f"**{faster}** was faster (~{speedup:.1f}× lower latency on this frame).")
 
 
 def render_static(image_bgr, cfg):
@@ -386,7 +385,7 @@ def render_static(image_bgr, cfg):
         st.warning("Could not read the image.")
         return
     if cfg.get("track"):
-        st.caption("🔀 Tracking needs a sequence of frames — it applies to the "
+        st.caption("Tracking needs a sequence of frames — it applies to the "
                    "**Live** and **Video** sources. Showing single-frame detection here.")
     if cfg["compare"]:
         render_static_compare(image_bgr, cfg)
@@ -409,7 +408,7 @@ def source_image_upload(cfg):
     if up is not None:
         render_static(file_to_bgr(up), cfg)
     else:
-        st.info("👆 Upload an image to run detection.")
+        st.info("Upload an image to run detection.")
 
 
 def source_sample(cfg):
@@ -429,7 +428,7 @@ def source_video(cfg):
     up = st.file_uploader("Upload a video", type=["mp4", "mov", "avi", "mkv"])
     skip = st.slider("Process every Nth frame (higher = faster)", 1, 10, 2)
     if up is None:
-        st.info("👆 Upload a short clip to run detection frame-by-frame.")
+        st.info("Upload a short clip to run detection frame-by-frame.")
         return
 
     import tempfile
@@ -486,7 +485,7 @@ def source_video(cfg):
             m_lat.metric("Latency", f"{np.mean(lat_hist):.0f} ms")
             m_fps.metric("Speed", f"{1000 / max(np.mean(lat_hist), 1e-6):.1f} FPS")
             if track:
-                track_ph.caption(f"🔀 Unique objects tracked so far: **{len(seen_ids)}**")
+                track_ph.caption(f"Unique objects tracked so far: **{len(seen_ids)}**")
             processed += 1
         idx += 1
         if total:
@@ -605,7 +604,7 @@ def source_live(cfg):
         st.warning(
             "Live webcam needs the optional packages **streamlit-webrtc** and "
             "**av**.\n\n```bash\npip install streamlit-webrtc av\n```\n"
-            "Meanwhile, use **📸 Webcam (snapshot)** — it works everywhere."
+            "Meanwhile, use **Webcam (snapshot)** — it works everywhere."
         )
         return
 
@@ -615,7 +614,7 @@ def source_live(cfg):
         "on each frame (A left / B right), so FPS roughly halves."
     )
     if cfg.get("track"):
-        st.caption("🔀 **Tracking on** — each object keeps its ID as it moves "
+        st.caption("**Tracking on** — each object keeps its ID as it moves "
                    "around the frame.")
 
     ctx = webrtc_streamer(
@@ -639,7 +638,7 @@ def source_live(cfg):
         )
 
     st.divider()
-    auto = st.checkbox("📊 Auto-refresh live metrics (pauses the controls)", value=False)
+    auto = st.checkbox("Auto-refresh live metrics (pauses the controls)", value=False)
     # The whole stats block lives in one placeholder and is fully replaced on
     # each redraw — so metrics don't stack up and the chart doesn't collide.
     stats_ph = st.empty()
@@ -651,7 +650,7 @@ def source_live(cfg):
         with stats_ph.container():
             metric_row(s)
             if s.get("tracking"):
-                st.caption(f"🔀 Unique objects tracked so far: **{s.get('unique_ids', 0)}**")
+                st.caption(f"Unique objects tracked so far: **{s.get('unique_ids', 0)}**")
             fig = class_bar(s["class_counts"], ACCENT)
             if fig:
                 # Unique key per redraw so repeated draws never reuse an element ID.
@@ -670,7 +669,7 @@ def source_live(cfg):
     else:
         _draw_stats()
         if ctx.state.playing:
-            st.button("🔄 Refresh stats")
+            st.button("Refresh stats")
 
 
 # ---------------------------------------------------------------------------
@@ -687,15 +686,15 @@ def main():
         st.stop()
 
     source = cfg["source"]
-    if source == "📷 Webcam (live)":
+    if source == "Webcam (live)":
         source_live(cfg)
-    elif source == "📸 Webcam (snapshot)":
+    elif source == "Webcam (snapshot)":
         source_snapshot(cfg)
-    elif source == "🖼️ Image upload":
+    elif source == "Image upload":
         source_image_upload(cfg)
-    elif source == "🎬 Video upload":
+    elif source == "Video upload":
         source_video(cfg)
-    elif source == "🧪 Sample image":
+    elif source == "Sample image":
         source_sample(cfg)
 
     st.markdown(

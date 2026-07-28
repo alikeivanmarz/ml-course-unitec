@@ -1,5 +1,5 @@
-# Theme for YOLO Vision Lab — a dark, professional dashboard look.
-# Tweak these colours to rebrand the app.
+# Theme for YOLO Vision Lab — dark dashboard palette.
+# Change these colours to rebrand the app.
 [theme]
 base = "dark"
 primaryColor = "#00D8A0"
