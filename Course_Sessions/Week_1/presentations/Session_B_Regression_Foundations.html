@@ -7,11 +7,11 @@
   <title>COMP8831 2026 | Regression Foundations and First Model</title>
   <style>
     :root {
-      --canvas: #fbfcfa;
-      --paper: #ffffff;
-      --ink: #17221c;
-      --muted: #4f5d55;
-      --line: #d9ded8;
+      --canvas: #fbf8f2;
+      --paper: #fffdf8;
+      --ink: #1c241d;
+      --muted: #55605a;
+      --line: #e4ded1;
       --forest: #17623b;
       --brand: #63a537;
       --lime: #99cb38;
@@ -19,12 +19,17 @@
       --cyan: #40a9c9;
       --amber: #8a5a00;
       --coral: #c95038;
-      --navy: #071a2b;
-      --soft-green: #eef6ef;
-      --soft-blue: #eef5f8;
-      --soft-amber: #faf4e6;
-      --soft-coral: #fdf0ec;
-      --shadow: 0 10px 24px rgba(23, 34, 28, 0.05);
+      --navy: #0a2233;
+      --soft-green: #edf4ea;
+      --soft-blue: #eaf2f7;
+      --soft-amber: #f9f1e0;
+      --soft-coral: #fbede6;
+      --shadow: 0 10px 24px rgba(72, 55, 30, 0.09);
+      /* Version 2 per-section accent, overridden by data-section-number below */
+      --accent: #17623b;
+      --accent-bright: #63a537;
+      --accent-soft: #edf4ea;
+      --accent-tint: #fbf8f2;
       --heading: Georgia, Cambria, "Times New Roman", serif;
       --body: Aptos, "Avenir Next", "Segoe UI", Arial, sans-serif;
       --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -40,7 +45,7 @@
       height: 100%;
       margin: 0;
       overflow: hidden;
-      background: #e7ebe7;
+      background: #e8e3da;
       color: var(--ink);
       font-family: var(--body);
     }
@@ -115,7 +120,31 @@
       display: none;
       flex-direction: column;
       padding: 72px 84px 130px;
-      background: var(--canvas);
+      background: var(--accent-tint);
+    }
+
+    /* Version 2 section identity: each teaching section owns one accent hue. */
+    .slide[data-section-number="01"] { --accent:#0f6b5c; --accent-bright:#2f9f8a; --accent-soft:#e7f3ef; --accent-tint:#f7faf6; }
+    .slide[data-section-number="02"] { --accent:#22703c; --accent-bright:#63a537; --accent-soft:#e9f3e8; --accent-tint:#f8fbf5; }
+    .slide[data-section-number="03"] { --accent:#1d5d86; --accent-bright:#3286b6; --accent-soft:#e9f1f7; --accent-tint:#f6f9fb; }
+    .slide[data-section-number="04"] { --accent:#a85a12; --accent-bright:#d98a2b; --accent-soft:#f8eeda; --accent-tint:#fcf7ee; }
+    .slide[data-section-number="05"] { --accent:#5b4b9e; --accent-bright:#8878c8; --accent-soft:#eeecf7; --accent-tint:#faf9fc; }
+    .slide[data-section-number="06"] { --accent:#0e7490; --accent-bright:#2fa4bf; --accent-soft:#e5f2f5; --accent-tint:#f5fafb; }
+    .slide[data-section-number="07"] { --accent:#7a6636; --accent-bright:#a88f4f; --accent-soft:#f4efe0; --accent-tint:#fbf8f1; }
+    .slide[data-section-number="08"] { --accent:#b0472f; --accent-bright:#d9694a; --accent-soft:#fbece6; --accent-tint:#fdf7f4; }
+    .slide[data-section-number="09"] { --accent:#17623b; --accent-bright:#63a537; --accent-soft:#edf4ea; --accent-tint:#f8fbf5; }
+    .slide[data-section-number="10"] { --accent:#435d80; --accent-bright:#6d87ab; --accent-soft:#eaeff5; --accent-tint:#f7f9fb; }
+
+    /* Slim accent band across the top of every content slide. */
+    .slide:not(.cover-slide):not(.section-slide):not(.closing-slide)::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 5px;
+      background: var(--accent-bright);
+      z-index: 4;
     }
 
     .slide.active {
@@ -151,7 +180,7 @@
       align-items: center;
       gap: 13px;
       margin: 0 0 15px;
-      color: var(--forest);
+      color: var(--accent);
       font-size: 18px;
       font-weight: 800;
       letter-spacing: 0.13em;
@@ -163,7 +192,7 @@
       width: 36px;
       height: 4px;
       border-radius: 999px;
-      background: var(--brand);
+      background: var(--accent-bright);
     }
 
     .slide-title {
@@ -2519,6 +2548,38 @@
       --section-soft: var(--soft-coral);
     }
 
+    /* Version 2: each numbered section divider carries its own accent hue and a
+       soft wash, replacing the repeated four-tone cycle. */
+    .section-slide {
+      --section-accent: var(--accent);
+      --section-soft: var(--accent-soft);
+      background:
+        radial-gradient(circle at 84% 14%, var(--accent-soft), transparent 44%),
+        linear-gradient(135deg, #fdfbf6 0%, var(--accent-soft) 100%);
+    }
+
+    .section-slide::after {
+      content: attr(data-section-number);
+      position: absolute;
+      right: 64px;
+      bottom: 96px;
+      z-index: 0;
+      font-family: var(--heading);
+      font-size: 300px;
+      font-weight: 700;
+      line-height: 0.8;
+      letter-spacing: -0.05em;
+      color: var(--section-accent);
+      opacity: 0.07;
+      pointer-events: none;
+    }
+
+    .section-slide .section-top,
+    .section-slide .section-main {
+      position: relative;
+      z-index: 1;
+    }
+
     .section-slide.active {
       display: grid;
     }
@@ -2663,6 +2724,197 @@
       color: var(--section-accent);
       font-size: 17px;
       font-weight: 800;
+    }
+
+    /* Version 2 reinforcement strip. Colour follows the section accent. */
+    .key-ideas {
+      display: grid;
+      grid-template-columns: 118px repeat(var(--ki-cols, 3), minmax(0, 1fr));
+      margin-top: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--accent-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .key-ideas .ki-label {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      line-height: 1.16;
+      text-transform: uppercase;
+    }
+
+    .key-ideas .ki-item {
+      padding: 13px 18px;
+      border-left: 1px solid rgba(255, 255, 255, 0.72);
+    }
+
+    .key-ideas .ki-item strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.18;
+    }
+
+    .key-ideas .ki-item span {
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.3;
+    }
+
+    /* Version 2 wrapper: hosts a full-height layout above a reinforcement strip. */
+    .stack-with-strip {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      gap: 18px;
+    }
+
+    .stack-with-strip .stack-main {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .stack-with-strip .key-ideas { margin-top: 0; }
+
+    /* Version 2 supervised-learning loop diagram. */
+    .loop-diagram {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 46px;
+      align-items: stretch;
+      margin-top: 10px;
+    }
+
+    .loop-node {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 22px 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .loop-node::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -34px;
+      width: 22px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--accent-bright);
+    }
+
+    .loop-node:last-child::after { display: none; }
+
+    .loop-node small {
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .loop-node strong {
+      font-family: var(--heading);
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .loop-node span {
+      color: var(--muted);
+      font-size: 17.5px;
+      line-height: 1.34;
+    }
+
+    .loop-node .loop-math {
+      margin-top: 2px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 17px;
+    }
+
+    .loop-return {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 26px;
+      padding: 15px 20px;
+      border-left: 5px solid var(--accent-bright);
+      border-radius: 0 14px 14px 0;
+      background: var(--accent-soft);
+      color: var(--ink);
+      font-size: 19px;
+      line-height: 1.36;
+    }
+
+    .loop-return svg { flex: none; }
+
+    /* Version 2 static theta comparison panels. */
+    .theta-multiples {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      height: calc(100% - 8px);
+      align-content: center;
+    }
+
+    .theta-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .theta-panel svg {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .theta-panel h3 {
+      margin: 0 0 4px;
+      font-family: var(--heading);
+      font-size: 25px;
+    }
+
+    .theta-panel p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 16.5px;
+      line-height: 1.3;
+    }
+
+    .theta-panel .theta-chip {
+      align-self: flex-start;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 15.5px;
+      font-weight: 700;
     }
 
     .formula-card {
@@ -6603,6 +6855,125 @@ def score_degree(degree, features):
         </div>
       `
     });
+
+    /* Version 2 additions: reinforcement strips, the supervised-learning loop
+       diagram, static theta comparison panels and two evidence checkpoints.
+       Content restates verified material; no measured value is new. */
+    const keyIdeasStrip = (items) => `
+      <div class="key-ideas" style="--ki-cols:${items.length}">
+        <div class="ki-label">Key ideas</div>
+        ${items.map(([head, tail]) => `<div class="ki-item"><strong>${head}</strong><span>${tail}</span></div>`).join("")}
+      </div>
+    `;
+    const amendSlideHtml = (title, extraHtml) => {
+      const slide = presentationSlides[findSlideIndex(title)];
+      if (slide && slide.html) slide.html += extraHtml;
+    };
+    const wrapWithStrip = (title, stripHtml) => {
+      const slide = presentationSlides[findSlideIndex(title)];
+      if (slide && slide.html) {
+        slide.html = `<div class="stack-with-strip"><div class="stack-main">${slide.html}</div>${stripHtml}</div>`;
+      }
+    };
+
+    amendSlideHtml("Training searches for theta values with a smaller total cost", keyIdeasStrip([
+      ["Residuals drive it", "Each candidate line leaves gaps at the points."],
+      ["Squaring matters", "Signs cannot cancel and large errors count more."],
+      ["Training minimises", "Fitting searches theta for the smallest cost."]
+    ]));
+    wrapWithStrip("Read a metric formula before reading its name", keyIdeasStrip([
+      ["MAE", "Average absolute error in target units."],
+      ["MSE and RMSE", "Squared view and its root back in target units."],
+      ["R squared", "Compares the model with the mean baseline."]
+    ]));
+
+    const loopSvgRows = `<svg viewBox="0 0 76 58" role="img" aria-label="Small table of labelled rows"><rect x="6" y="6" width="64" height="46" rx="7" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M6 20h64M31 6v46M50 6v46" stroke="currentColor" stroke-width="2" opacity="0.5"/><rect x="52" y="22" width="16" height="28" fill="currentColor" opacity="0.16"/></svg>`;
+    const loopSvgModel = `<svg viewBox="0 0 76 58" role="img" aria-label="Model box"><rect x="10" y="10" width="56" height="38" rx="10" fill="#fff" stroke="currentColor" stroke-width="2.6"/><circle cx="28" cy="29" r="7" fill="currentColor" opacity="0.35"/><path d="M40 22h16M40 30h12M40 38h15" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>`;
+    const loopSvgPrediction = `<svg viewBox="0 0 76 58" role="img" aria-label="Prediction dot on a fitted line"><line x1="8" y1="48" x2="68" y2="14" stroke="currentColor" stroke-width="3.4"/><circle cx="47" cy="26" r="6.5" fill="currentColor"/></svg>`;
+    const loopSvgCompare = `<svg viewBox="0 0 76 58" role="img" aria-label="Prediction compared with the actual value"><circle cx="26" cy="38" r="6.5" fill="currentColor"/><circle cx="52" cy="18" r="6.5" fill="#fff" stroke="currentColor" stroke-width="3"/><line x1="30" y1="34" x2="48" y2="22" stroke="currentColor" stroke-width="2.6" stroke-dasharray="4 4"/></svg>`;
+    const loopSvgCycle = `<svg viewBox="0 0 44 44" width="34" height="34" role="img" aria-label="Feedback cycle"><path d="M22 7a15 15 0 1 1-14 10" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M4 9l4 8 8-4" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+    insertBeforeTitle("The output determines the supervised task", [{
+      kicker: "Mental model",
+      title: "One picture to keep: the supervised learning loop",
+      subtitle: "Labelled rows train a model, predictions meet reality, and the gap improves the next attempt.",
+      html: `
+        <div class="loop-diagram" style="color:var(--accent)">
+          <article class="loop-node"><small>1 | Evidence</small><span style="color:var(--accent)">${loopSvgRows}</span><strong>Labelled rows</strong><span>Features together with a known numeric target.</span></article>
+          <article class="loop-node"><small>2 | Rule</small><span style="color:var(--accent)">${loopSvgModel}</span><strong>Model</strong><span>A rule that turns the features of one row into a prediction.</span></article>
+          <article class="loop-node"><small>3 | Output</small><span style="color:var(--accent)">${loopSvgPrediction}</span><strong>Prediction</strong><span>An estimated target value for every row.</span></article>
+          <article class="loop-node"><small>4 | Reality</small><span style="color:var(--accent)">${loopSvgCompare}</span><strong>Compare</strong><span>The prediction meets the actual target; the gap is the error.</span></article>
+        </div>
+        <div class="loop-return"><span style="color:var(--accent)">${loopSvgCycle}</span><span><strong>The error feeds training.</strong> Adjust the model, predict again and compare again. This loop returns later today with its mathematics.</span></div>
+      `
+    }]);
+
+    insertBeforeTitle("Training searches for theta values with a smaller total cost", [{
+      kicker: "Mental model, annotated",
+      title: "The same loop, now carrying its mathematics",
+      subtitle: "Every part of the loop from Section 02 now has a formula from this section.",
+      html: `
+        <div class="loop-diagram" style="color:var(--accent)">
+          <article class="loop-node"><small>1 | Evidence</small><span style="color:var(--accent)">${loopSvgRows}</span><strong>Labelled rows</strong><span>Engine size is the feature, CO2 is the known target.</span></article>
+          <article class="loop-node"><small>2 | Rule</small><span style="color:var(--accent)">${loopSvgModel}</span><strong>Model</strong><span>The one-feature line.</span><span class="loop-math">y&#770; = &theta;<sub>0</sub> + &theta;<sub>1</sub>x</span></article>
+          <article class="loop-node"><small>3 | Output</small><span style="color:var(--accent)">${loopSvgPrediction}</span><strong>Prediction</strong><span>One predicted CO2 value per vehicle.</span></article>
+          <article class="loop-node"><small>4 | Reality</small><span style="color:var(--accent)">${loopSvgCompare}</span><strong>Residual</strong><span>The signed gap for each row.</span><span class="loop-math">e = y - y&#770;</span></article>
+        </div>
+        <div class="loop-return"><span style="color:var(--accent)">${loopSvgCycle}</span><span><strong>Training closes the loop.</strong> It adjusts &theta;<sub>0</sub> and &theta;<sub>1</sub> to shrink the total of squared residuals. The next slide names that total: the cost.</span></div>
+      `
+    }]);
+
+    const thetaScatter = `<g fill="#5b6a60" opacity="0.85"><circle cx="44" cy="91" r="4"/><circle cx="66" cy="78" r="4"/><circle cx="91" cy="75" r="4"/><circle cx="120" cy="61" r="4"/><circle cx="149" cy="51" r="4"/><circle cx="174" cy="48" r="4"/><circle cx="196" cy="35" r="4"/></g>`;
+    const thetaAxes = `<line x1="26" y1="104" x2="212" y2="104" stroke="#9aa89f" stroke-width="2"/><line x1="26" y1="104" x2="26" y2="12" stroke="#9aa89f" stroke-width="2"/><text x="206" y="114" fill="#7c8a80" font-size="10" font-family="sans-serif">x</text><text x="14" y="18" fill="#7c8a80" font-size="10" font-family="sans-serif">y</text>`;
+    const thetaPanel = (chip, heading, lineY1, lineY2, note, lineColor) => `
+      <article class="theta-panel">
+        <span class="theta-chip">${chip}</span>
+        <h3>${heading}</h3>
+        <svg viewBox="0 0 220 118" role="img" aria-label="${heading}">${thetaAxes}${thetaScatter}<line x1="30" y1="${lineY1}" x2="210" y2="${lineY2}" stroke="${lineColor}" stroke-width="5" stroke-linecap="round"/></svg>
+        <p>${note}</p>
+      </article>
+    `;
+
+    insertBeforeTitle("The fitted CO2 line is an equation, not only a picture", [{
+      kicker: "Simple linear regression",
+      title: "Three theta pairs draw three different lines",
+      subtitle: "The slider frozen at three settings on shared illustrative axes. Only theta changes; the points stay fixed.",
+      html: `
+        <div class="theta-multiples">
+          ${thetaPanel("&theta;0 = 60, &theta;1 = 0", "Intercept only", 43, 43, "A flat guess. Height comes from the intercept and the slope ignores the trend.", "#a85a12")}
+          ${thetaPanel("&theta;0 = 0, &theta;1 = 6", "Slope only", 104, 43, "Tilted but pinned at zero, so every prediction starts too low.", "#435d80")}
+          ${thetaPanel("&theta;0 = 10, &theta;1 = 6", "Intercept and slope", 94, 32, "Shifted and tilted together, the line follows the points closely.", "#1d5d86")}
+        </div>
+      `
+    }]);
+
+    insertBeforeTitle("Fit a three-feature linear model with the same workflow", [{
+      kicker: "Evidence checkpoint",
+      title: "Checkpoint: the plane is fitted and the protocol held",
+      subtitle: "Two models are complete. The habits stay identical while the feature list grows.",
+      html: `
+        <div class="loop-diagram" style="grid-template-columns:repeat(3, minmax(0,1fr));color:var(--accent)">
+          <article class="loop-node"><small>Done | One feature</small><strong>A fitted line</strong><span>Engine size alone predicts CO2.</span><span class="loop-math">y&#770; = 126.290 + 38.993x</span></article>
+          <article class="loop-node"><small>Done | Two features</small><strong>A fitted plane</strong><span>Engine size and combined fuel use together.</span><span class="loop-math">y&#770; = 79.605 + 19.593x<sub>1</sub> + 9.618x<sub>2</sub></span></article>
+          <article class="loop-node"><small>Held | The rule</small><strong>Training rows only</strong><span>Both fits used the training portion. The test rows remain untouched for later evidence.</span></article>
+        </div>
+        <div class="loop-return"><span style="color:var(--accent)">${loopSvgCycle}</span><span><strong>Next: three features.</strong> The split, fit and predict workflow stays the same; only the feature list changes.</span></div>
+      `
+    }]);
+
+    insertBeforeTitle("Activity 4A: compare a line and curve with one feature", [{
+      kicker: "Evidence checkpoint",
+      title: "Checkpoint: degree is a training-time decision",
+      subtitle: "The polynomial workflow so far, before you apply it yourself.",
+      html: `
+        <div class="loop-diagram" style="grid-template-columns:repeat(3, minmax(0,1fr));color:var(--accent)">
+          <article class="loop-node"><small>1 | Expand</small><strong>Inside a Pipeline</strong><span>PolynomialFeatures creates the extra terms inside model fitting, so no expansion leaks out.</span></article>
+          <article class="loop-node"><small>2 | Compare</small><strong>Training-only cross-validation</strong><span>Each candidate degree is scored on training folds. The test rows never enter this comparison.</span></article>
+          <article class="loop-node"><small>3 | Decide</small><strong>Refit once, then test once</strong><span>The selected degree is refitted and only then evaluated on the held-out partition.</span></article>
+        </div>
+        <div class="loop-return"><span style="color:var(--accent)">${loopSvgCycle}</span><span><strong>Your turn.</strong> Activities 4A and 4B reuse exactly this pattern with one and two features.</span></div>
+      `
+    }]);
 
     const sectionCueTitles = {
       "01": "Setup",
