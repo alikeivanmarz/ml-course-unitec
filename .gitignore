@@ -225,6 +225,11 @@ results/
 checkpoints/
 logs/
 
+# Local presentation audit scratch directories created at repository root
+/.codex-tmp-*/
+/.tmp-*-audit.*/
+/.w*_audit.*/
+
 # Conda environment files (platform specific)
 mlcourse_windows.yml
 mlcourse_macos.yml
