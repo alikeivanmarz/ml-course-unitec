@@ -5364,7 +5364,7 @@ function bGrid(matrix,x,y,cell=30,options={}){
   return matrix.map((row,r)=>row.map((v,c)=>{
     const t=v===null?0:(v-lo)/(hi-lo||1),displayT=options.image?Math.pow(Math.max(0,Math.min(1,t)),.65):t,grey=Math.round(options.image||options.max===255?255*displayT:246-218*t),fill=v===null?'#f0f2ee':options.colour?`rgba(29,93,134,${.08+.85*t})`:`rgb(${grey},${grey},${grey})`;
     const num=v===null?'':Number.isInteger(v)?v:Number(v).toFixed(options.decimals??1);
-    return `<rect x="${x+c*cell}" y="${y+r*cell}" width="${options.image?cell+.02:cell-1}" height="${options.image?cell+.02:cell-1}" fill="${fill}" stroke="${options.image?'none':'#d9ded8'}" stroke-width=".6"/>`+(options.numbers?bText(x+(c+.5)*cell,y+(r+.66)*cell,num,Math.min(23,cell*.36),t>.55?'#fff':'#17221c'):'');
+    return `<rect x="${x+c*cell}" y="${y+r*cell}" width="${options.image?cell+.02:cell-1}" height="${options.image?cell+.02:cell-1}" fill="${fill}" stroke="${options.image?'none':'#d9ded8'}" stroke-width=".6"${options.image?' shape-rendering="crispEdges"':''}/>`+(options.numbers?bText(x+(c+.5)*cell,y+(r+.66)*cell,num,Math.min(23,cell*.36),t>.55?'#fff':'#17221c'):'');
   }).join('')).join('');
 }
 function bWindow(x,y,row,col,cell,n=3,colour=bColour.coral){return `<rect x="${x+col*cell-2}" y="${y+row*cell-2}" width="${n*cell+3}" height="${n*cell+3}" fill="none" stroke="${colour}" stroke-width="4"/>`;}
@@ -5485,7 +5485,7 @@ document.addEventListener('input',e=>{if(['stride-value','padding-value'].includ
 const bPoolSource=[[8,8,6,2,8,7],[2,1,6,6,6,8],[7,4,8,8,8,13],[6,3,7,11,16,14],[6,5,7,8,14,15],[4,4,13,18,15,24]];
 bAfter('pooling-lab',[{id:'pooling-scan-animation',section:'architecture',kicker:'Pooling walkthrough',title:'Max and average pooling summarise the same windows',subtitle:'A 2 × 2 window with stride 2 turns this 6 × 6 map into a 3 × 3 map.',body:bAnimation('b-pooling-scan',9,s=>{const r=Math.floor(s/3)*2,c=s%3*2,values=bPoolSource.slice(r,r+2).flatMap(row=>row.slice(c,c+2));let art=bText(210,32,'Source feature map',26)+bGrid(bPoolSource,30,68,58,{numbers:true,min:0,max:24})+bWindow(30,68,r,c,58,2);['max','average'].forEach((mode,i)=>{const out=Array.from({length:3},(_,y)=>Array.from({length:3},(_,x)=>{const v=bPoolSource.slice(y*2,y*2+2).flatMap(row=>row.slice(x*2,x*2+2));return y*3+x<=s?(mode==='max'?Math.max(...v):v.reduce((a,b)=>a+b)/4):null;}));art+=bText(650+i*385,32,mode==='max'?'Max pooling':'Average pooling',26)+bGrid(out,548+i*385,117,68,{numbers:true,min:0,max:24,decimals:2})+bWindow(548+i*385,117,Math.floor(s/3),s%3,68,1,bColour.green);});return `<div class="b-visual">${bSvg(art,'A moving two by two window fills max and average pooled outputs')}</div>`;},s=>{const r=Math.floor(s/3)*2,c=s%3*2,v=bPoolSource.slice(r,r+2).flatMap(row=>row.slice(c,c+2));return `Values: ${v.join(', ')}. Max = ${Math.max(...v)}. Average = ${(v.reduce((a,b)=>a+b)/4).toFixed(2)}. Pooling has no learned weights.`;})}]);
 
-function bCnnTrace(s){
+function bCnnOverview(s){
   const stages=[{layer:'Input',shape:[28,28,1],values:bDigit.map(r=>r.map(v=>[v/255]))},...visionExample.cnn_stages];
   const labels=['Input','Conv + ReLU','Max pool','Conv + ReLU','Max pool','Flatten','Dense + ReLU','Softmax'];
   let art='';
@@ -5497,9 +5497,9 @@ function bCnnTrace(s){
         const n=stage.shape[0],channels=Math.min(4,stage.shape[2]);
         for(let k=0;k<channels;k++){
           const m=stage.values.map(r=>r.map(v=>v[k]));
-          // Display-only gamma and a larger grid reveal the input garment.
-          // Recorded input/activation values are unchanged.
-          art+=bGrid(m,x+12+(i===0?0:k%2*65),95+(i===0?0:Math.floor(k/2)*88),(i===0?120:58)/n,i===0?{min:0,max:1,image:true}:{});
+          // Continuous high-contrast pixels, without grid lines or cell gaps.
+          // Contrast changes only the display, not the recorded activations.
+          art+=bGrid(m,x+12+(i===0?0:k%2*65),95+(i===0?0:Math.floor(k/2)*88),(i===0?120:58)/n,{min:0,...(i===0?{max:1}:{}),image:true});
         }
       }else{
         const vals=stage.values,max=Math.max(...vals);
@@ -5508,12 +5508,47 @@ function bCnnTrace(s){
       }
     }
   });
-  return `<div class="b-visual">${bSvg(art,'Measured CNN activations from a real validation clothing image; input contrast enhanced only for display')}</div>`;
+  return `<div class="b-visual b-cnn-overview">${bSvg(art,'Measured CNN activations from a real validation clothing image; image contrast enhanced only for display')}</div>`;
 }
-bRevise('cnn-architecture',{title:'A clothing image passes through the complete CNN',subtitle:'Recorded after one demonstration epoch on all 48,000 training images. Feature maps are individually scaled for visibility.',body:bAnimation('b-cnn-trace',8,bCnnTrace,s=>['The input is a real validation T-shirt/top, scaled from 0 to 1.','The first convolution produces 16 maps. Four are shown.','Pooling reduces 28 × 28 maps to 14 × 14.','The second convolution combines earlier maps into 32 maps. Four are shown.','The second pooling layer reduces each map to 7 × 7.','Flatten rearranges 7 × 7 × 32 = 1,568 values. It does not learn new weights.','A dense layer learns 32 combinations of those values.','Softmax converts ten scores into probabilities for the ten clothing categories.'][s])});
+function bCnnTrace(s){
+  const stages=[{layer:'Input',shape:[28,28,1],values:bDigit.map(r=>r.map(v=>[v/255]))},...visionExample.cnn_stages];
+  const labels=['Input','Conv + ReLU','Max pool','Conv + ReLU','Max pool','Flatten','Dense + ReLU','Softmax'];
+  const stage=stages[s];
+  // Keep the full layer sequence visible, then enlarge the current layer.
+  let art=stages.map((item,i)=>{
+    const x=18+i*157;
+    return `<rect x="${x}" y="8" width="144" height="65" rx="12" fill="${i<=s?'#edf4ea':'#fff'}" stroke="${i===s?bColour.green:'#d9ded8'}" stroke-width="${i===s?3:1}"/>`+bText(x+72,33,labels[i],18)+bText(x+72,59,item.shape.join(' × '),18,i<=s?bColour.green:'#4f5d55');
+  }).join('');
+  if(s===0){
+    art+=`<g class="b-cnn-input">${bGrid(bDigit,500,100,240/28,{min:0,max:255,image:true})}</g>`+
+      bText(250,179,'28 × 28 pixels',28)+bText(250,217,'784 input values',23)+
+      bText(990,179,'One grayscale channel',25)+bText(990,217,'Pixel values scaled to 0 to 1',22)+
+      bText(620,362,'Real validation image: T-shirt/top',20);
+  }else{
+    art+=bText(125,118,'Original input',22)+`<g class="b-cnn-input">${bGrid(bDigit,55,148,140/28,{min:0,max:255,image:true})}</g>`+bText(125,319,'28 × 28 × 1',20)+bConnect(220,216,280,216);
+    if(stage.shape.length===3){
+      const n=stage.shape[0];
+      for(let k=0;k<4;k++){
+        const x=345+k*228,m=stage.values.map(r=>r.map(v=>v[k]));
+        art+=bText(x+80,118,`Map ${k+1}`,23)+`<g class="b-cnn-map" data-channel="${k}">${bGrid(m,x,142,160/n,{min:0,image:true})}</g>`+bText(x+80,328,`${n} × ${n}`,20);
+      }
+      art+=bText(790,362,`First 4 of ${stage.shape[2]} maps. Black = zero; white = each map's peak. Display contrast only.`,19);
+    }else{
+      const vals=stage.values,shown=s===7?10:16,max=Math.max(...vals),spacing=s===7?86:54;
+      art+=bText(780,112,s===7?'All ten class probabilities':`First ${shown} of ${vals.length} recorded values`,25);
+      for(let j=0;j<shown;j++){
+        const height=Math.max(2,150*vals[j]/(max||1)),x=350+j*spacing;
+        art+=`<rect x="${x}" y="${292-height}" width="${spacing-14}" height="${height}" fill="${s===7&&vals[j]===max?bColour.green:bColour.blue}"/>`+bText(x+(spacing-14)/2,317,s===7?`class ${j}`:j+1,s===7?17:18);
+      }
+      art+=bText(780,362,s===7?`Most likely: class ${vals.indexOf(max)} (${(100*max).toFixed(1)}%). The ten probabilities sum to 1.`:'Bar height shows the recorded value; zero remains zero.',20);
+    }
+  }
+  return `<div class="b-visual"><svg class="b-diagram b-cnn-detail" viewBox="0 0 1280 380" role="img" aria-label="${escapeHtml('Recorded CNN layer '+(s+1)+': '+labels[s]+'. Enlarged images use display-only contrast enhancement.')}" >${art}</svg></div>`;
+}
+bRevise('cnn-architecture',{title:'Follow one clothing image through the CNN',subtitle:'Fashion-MNIST, one epoch on all 48,000 training images. Inspect each layer with Next step or Play.',body:bAnimation('b-cnn-trace',8,bCnnTrace,s=>['The input is a real validation T-shirt/top, scaled from 0 to 1.','The first convolution produces 16 maps. Four are shown.','Pooling reduces 28 × 28 maps to 14 × 14.','The second convolution combines earlier maps into 32 maps. Four are shown.','The second pooling layer reduces each map to 7 × 7.','Flatten rearranges 7 × 7 × 32 = 1,568 values. It does not learn new weights.','A dense layer learns 32 combinations of those values.','Softmax converts ten scores into probabilities for the ten clothing categories.'][s])});
 
 // Model declarations remain one source line per layer.
-bRevise('cnn-lab-summary',{subtitle:'Each label matches a layer in the copied model. There are 55,338 trainable parameters.',body:bCnnTrace(7)+'<p class="b-caption">Flatten produces 1,568 values. The next Dense layer has 32 units. The output layer has 10 units, one probability for each clothing category.</p>'});
+bRevise('cnn-lab-summary',{subtitle:'Each label matches a layer in the copied model. There are 55,338 trainable parameters.',body:bCnnOverview(7)+'<p class="b-caption">Flatten produces 1,568 values. The next Dense layer has 32 units. The output layer has 10 units, one probability for each clothing category.</p>'});
 for(const s of slides)if(s.body?.includes('code-cnn-build'))s.className='b-layer-code';
 
 function bPatchGrid(x,y,cell=40,order=null,labels=false){let art='';for(let p=0;p<16;p++){const source=order?order[p]:p,r=Math.floor(source/4)*7,c=source%4*7,patch=bDigit.slice(r,r+7).map(row=>row.slice(c,c+7)),px=x+p%4*cell*2,py=y+Math.floor(p/4)*cell*2;art+=bGrid(patch,px,py,cell*2/7,{min:0,max:255})+`<rect x="${px}" y="${py}" width="${cell*2}" height="${cell*2}" fill="none" stroke="${bColour.blue}" stroke-width="2"/>`;if(labels)art+=`<rect x="${px+2}" y="${py+2}" width="25" height="22" fill="#fff"/>`+bText(px+14,py+19,source,16,bColour.blue);}return art;}
