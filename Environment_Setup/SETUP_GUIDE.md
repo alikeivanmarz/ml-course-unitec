@@ -203,6 +203,13 @@ conda clean --all
 ### Issue: TensorFlow warnings about CUDA
 **Solution:** These warnings are normal on systems without NVIDIA GPUs. TensorFlow will use CPU automatically.
 
+### Issue: Neural network loss goes up during training on a Mac
+**Solution:** Mac users: do not install `tensorflow-metal`. Some online tutorials recommend it for Apple Silicon GPUs, but it gives incorrect training results for the course models and is slower than the CPU for them. If you already installed it, remove it and restart the Jupyter kernel:
+```bash
+conda activate mlcourse
+pip uninstall -y tensorflow-metal
+```
+
 ### Issue: Kernel not showing in Jupyter
 **Solution:** Re-register the kernel:
 ```bash
