@@ -3337,6 +3337,23 @@
 .revision-visual p { text-align:center; font-size:20px; margin:4px 0; }
 .revision-split { display:grid; grid-template-columns:400px minmax(0,1fr); gap:32px; height:100%; min-height:0; }
 .revision-footnote { font-size:19px; color:var(--muted); margin:12px 0 0; }
+.pattern-comparison { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; height:100%; min-height:0; }
+.pattern-comparison article { display:flex; flex-direction:column; min-width:0; min-height:0; padding:16px 20px; border:1px solid var(--line); border-radius:18px; background:var(--paper); }
+.pattern-comparison h3 { margin:0 0 8px; font:700 27px var(--heading); }
+.pattern-comparison svg { flex:1; min-height:0; overflow:hidden; }
+.pattern-comparison p { margin:9px 0 0; font-size:19px; line-height:1.3; }
+#image-model-limits .slide-content { display:flex; flex-direction:column; }
+#image-model-limits .revision-visual { padding:12px 18px; border:1px solid var(--line); border-radius:18px; background:var(--paper); }
+#image-model-limits .revision-footnote { margin-top:12px; font-size:20px; line-height:1.32; }
+.baseline-code-slide .slide-content { display:flex; flex-direction:column; gap:0; }
+.baseline-code-slide .activity-banner { flex:0 0 auto; }
+.baseline-code-slide .code-panel { flex:1; min-height:0; }
+.baseline-results { display:grid; border:1px solid var(--line); border-radius:18px; overflow:hidden; background:var(--paper); }
+.baseline-results-head,.baseline-results-row { display:grid; grid-template-columns:1.3fr repeat(3,1fr); align-items:center; gap:18px; padding:20px 26px; }
+.baseline-results-head { background:#17623b; color:#fff; font-size:20px; font-weight:800; }
+.baseline-results-row { border-top:1px solid var(--line); font-size:22px; }
+.baseline-results-row strong { font:700 27px var(--heading); }
+.baseline-results-row span { color:var(--muted); }
 #layer-structure .slide-content, #training-loop .slide-content { display:flex; flex-direction:column; }
 .term-definitions { display:flex; flex-direction:column; justify-content:center; gap:22px; }
 .term-definitions p { margin:0; border-left:4px solid #17623b; padding-left:18px; }
@@ -5118,6 +5135,134 @@ insertAfter("review-terminology",[revisionReviewGame]);
 const originalReviewPage=extraReviewPage("review-original-questions",originalReviewQuestions,"Review: classification foundations");
 slides.splice(slides.findIndex(s=>s.id==="review-game"),0,originalReviewPage);
 
+// The same digits and split are reused later in the dense-network activity.
+const baselineSplit = `X_train_full, X_test, y_train_full, y_test = train_test_split(
+    X_flat, y, test_size=0.20, random_state=42, stratify=y
+)
+X_train, X_val, y_train, y_val = train_test_split(
+    X_train_full, y_train_full, test_size=0.20,
+    random_state=42, stratify=y_train_full
+)`;
+function baselineActivity(id,title,subtitle,code,label) {
+  return {id,section:"why",kicker:"Class activity | Digit baselines",title,subtitle,
+    className:"baseline-code-slide",
+    body:`${activityBanner("Copy, comment, run",label)}${codePanel("Python | Complete cell",code,"code-"+id)}`};
+}
+const logisticBaselineCode=`import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
+
+digits = load_digits()
+X = digits.images.astype("float32") / 16.0
+y = digits.target
+X_flat = X.reshape(len(X), 64)
+
+${baselineSplit}
+
+logistic_model = LogisticRegression(max_iter=3000, random_state=42)
+logistic_model.fit(X_train, y_train)
+lr_validation_accuracy = accuracy_score(y_val, logistic_model.predict(X_val))
+lr_predictions = logistic_model.predict(X_test)
+lr_test_accuracy = accuracy_score(y_test, lr_predictions)
+
+print("Train, validation, test:", len(X_train), len(X_val), len(X_test))
+print("Validation accuracy:", round(lr_validation_accuracy, 4))
+print("Test accuracy:", round(lr_test_accuracy, 4))
+print(classification_report(y_test, lr_predictions))
+ConfusionMatrixDisplay.from_predictions(
+    y_test, lr_predictions, cmap="Blues", colorbar=False
+)
+plt.show()`;
+const forestBaselineCode=`import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
+
+digits = load_digits()
+X = digits.images.astype("float32") / 16.0
+y = digits.target
+X_flat = X.reshape(len(X), 64)
+
+${baselineSplit}
+
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=1)
+rf_model.fit(X_train, y_train)
+rf_validation_accuracy = accuracy_score(y_val, rf_model.predict(X_val))
+rf_predictions = rf_model.predict(X_test)
+rf_test_accuracy = accuracy_score(y_test, rf_predictions)
+
+print("Train, validation, test:", len(X_train), len(X_val), len(X_test))
+print("Validation accuracy:", round(rf_validation_accuracy, 4))
+print("Test accuracy:", round(rf_test_accuracy, 4))
+print(classification_report(y_test, rf_predictions))
+ConfusionMatrixDisplay.from_predictions(
+    y_test, rf_predictions, cmap="Blues", colorbar=False
+)
+plt.show()`;
+insertAfter("section-why",[
+  baselineActivity("digits-logistic-baseline","Classify the digits with logistic regression",
+    "Run this whole cell in a notebook. The same images and split return in the neural-network activity.",
+    logisticBaselineCode,"Baseline 1 of 2"),
+  baselineActivity("digits-forest-baseline","Classify the same digits with Random Forest",
+    "Use a new cell. Keep the split, features, and ten target classes identical.",
+    forestBaselineCode,"Baseline 2 of 2"),
+]);
+reviseSlide("section-why",{description:"Build two digit baselines, then inspect patterns that call for richer feature representations."});
+
+function alternatingPocketsSvg(){
+  let art='<rect x="35" y="45" width="610" height="365" rx="18" fill="#f7faf8"/>';
+  for(let row=0;row<4;row++)for(let col=0;col<5;col++){
+    const blue=(row+col)%2===0,x=54+col*116,y=62+row*83;
+    art+=`<rect x="${x}" y="${y}" width="108" height="76" rx="9" fill="${blue?"#eaf2f7":"#fbede6"}" stroke="#d9ded8"/>`;
+    for(const [dx,dy] of [[29,21],[72,23],[51,52]]){
+      const px=x+dx,py=y+dy;
+      art+=blue?`<circle cx="${px}" cy="${py}" r="9" fill="${V.blue}" stroke="#fff" stroke-width="2"/>`
+        :`<rect x="${px-8}" y="${py-8}" width="16" height="16" rx="2" fill="${V.coral}" stroke="#fff" stroke-width="2"/>`;
+    }
+  }
+  art+=svgText(340,438,"Alternating local regions",21)+svgText(165,477,"Class A: circles",18,V.blue)+svgText(470,477,"Class B: squares",18,V.coral);
+  return diagram(art,"Illustrative two-feature classes in alternating local regions. Blue circles and coral squares appear throughout the plot.",680,500);
+}
+reviseSlide("nonlinear-patterns",{
+  title:"Compare a simple boundary with alternating class regions",
+  subtitle:"These are illustrative two-feature patterns. The second needs many local decisions.",
+  body:`<div class="pattern-comparison"><article><h3>Simple separation</h3>${complexBoundarySvg().replace("A useful rule may need several bends","A straight line works here too")}<p>The existing example can be separated by a straight horizontal line. The drawn bends are optional.</p></article><article><h3>Intertwined classes</h3>${alternatingPocketsSvg()}<p>Class labels alternate across the plot. One straight line or one gentle curve will not separate them.</p></article></div>`
+});
+
+function imageModelComparisonSvg(){
+  let art=svgText(125,58,"Real digit 7",25)+pixelArt(digitPixels[7],45,82,160)+svgText(125,286,"8 × 8 = 64 pixels",20);
+  art+=svgText(125,334,"28 × 28 would have",19)+svgText(125,365,"784 pixels",24,V.blue);
+  const rows=[
+    ["Linear classifier","64 pixel weights per class; no learned pixel interactions",V.blue],
+    ["Degree 2 features","2,144 terms for 64 pixels; 308,504 for 784",V.amber],
+    ["Random Forest","100 trees ask pixel-threshold questions",V.coral],
+    ["Dense neural network","64 inputs, 64 learned units, 10 output classes",V.green],
+  ];
+  rows.forEach(([title,detail,colour],i)=>{
+    const y=22+i*98;
+    art+=`<path d="M220 170L275 ${y+41}" fill="none" stroke="${colour}" stroke-width="3"/>`;
+    art+=`<rect x="290" y="${y}" width="930" height="86" rx="14" fill="#fff" stroke="${colour}" stroke-width="3"/>`;
+    art+=svgText(315,y+33,title,24,colour,"start")+svgText(315,y+65,detail,21,"#17221c","start");
+    art+=`<circle cx="282" cy="${y+41}" r="6" fill="${colour}"/>`;
+  });
+  return diagram(art,"The same digit image enters a linear classifier, polynomial feature expansion, a forest, or a dense neural network. Feature counts for degree two expansion increase rapidly.",1280,440);
+}
+insertAfter("nonlinear-patterns",[{
+  id:"image-model-limits",section:"why",kicker:"Image complexity",
+  title:"More pixels change what each model must learn",
+  subtitle:"A model's useful capacity depends on its feature representation, data, and validation results.",
+  body:`<div class="revision-visual">${imageModelComparisonSvg()}</div><p class="revision-footnote"><strong>What to notice:</strong> a polynomial expansion grows quickly, trees can need many pixel tests, and a network learns intermediate combinations. Random Forest can still be strong on small digits. Compare the actual scores later.</p>`
+}]);
+insertAfter("activity-interpretation",[{
+  id:"compare-digit-baselines",section:"keras",kicker:"Class discussion | Three models",
+  title:"Compare three models on the same 360 test digits",
+  subtitle:"Use the outputs from the two early baseline cells and the later neural-network cells.",
+  body:`<div class="baseline-results"><div class="baseline-results-head"><span>Model</span><span>Validation accuracy</span><span>Test accuracy</span><span>Test errors</span></div>${["Logistic regression","Random Forest","Dense neural network"].map(name=>`<div class="baseline-results-row"><strong>${name}</strong><span>Record your result</span><span>Record your result</span><span>Out of 360</span></div>`).join("")}</div><div class="callout blue" style="margin-top:22px"><strong>Discuss:</strong> Which digits are confused by each model? Does the larger model actually improve this test? Use the confusion matrices and the same split before making a claim.</div>`
+}]);
+
 reviseSlide("representation-hierarchy",{title:"How a digit can become a set of useful features",subtitle:"Illustration of learned features. Individual neurons do not always correspond to named edges or shapes.",body:featureStrip()+`<p class="revision-footnote">The input is a real digit. The intermediate patterns and 87% output illustrate the idea, not a measured model result.</p>`});
 reviseSlide("network-limitations",{title:"Data, computation, and interpretation",subtitle:"A neural network still needs representative examples and checks on unseen data.",body:`<div class="concept-strip"><article class="concept">${diagram(pixelArt(digitPixels[7],25,25,160)+svgText(290,75,"label: 1",29,V.coral)+svgText(285,130,"Wrong label",24,V.coral)+svgText(205,250,"Repeated errors teach the wrong pattern.",19),"Digit seven incorrectly labelled one",430,310)}<h3>Data quality</h3><p>Wrong labels, noise, and missing types of handwriting can lead to unreliable predictions.</p></article><article class="concept">${diagram(`<rect x="40" y="215" width="130" height="20" fill="${V.blue}"/><rect x="250" y="55" width="130" height="180" fill="${V.purple}"/>${svgText(105,270,"4,810",25)}${svgText(315,270,"42,378",25)}${svgText(215,30,"Trainable parameters",24)}`,"Parameter count comparison for 64 inputs and ten outputs",430,310)}<h3>Computation</h3><p>64 hidden units: 4,810 parameters. Two 128-unit layers: 26,122. Larger models usually need more memory and computation.</p></article><article class="concept">${smallNetwork([3,5,3],["pixels","weights","class"])}<h3>Interpretation</h3><p>Many weights act together. A connection weight alone rarely explains why an image became class 7.</p></article></div>`});
 // Correct the displayed comparison to the architecture named in the caption.
@@ -5289,6 +5434,8 @@ window.addEventListener("beforeprint",()=>Object.keys(revisionAnimations).forEac
 
 // Match these comments in the notebook. No solution is inserted automatically.
 const commentExercises = {
+  "code-digits-logistic-baseline":[["import matplotlib", "Import the dataset, model and evaluation tools"],["digits = load_digits", "Load and scale the same digit images"],["X_train_full,", "Make the fixed train, validation and test split"],["logistic_model =", "Fit logistic regression on the training rows"],["lr_validation_accuracy =", "Measure validation accuracy before the final test"],["lr_predictions =", "Predict the test digits and display detailed errors"]],
+  "code-digits-forest-baseline":[["import matplotlib", "Import the dataset, model and evaluation tools"],["digits = load_digits", "Load and scale the same digit images"],["X_train_full,", "Make the fixed train, validation and test split"],["rf_model =", "Fit one hundred trees on the training rows"],["rf_validation_accuracy =", "Measure validation accuracy before the final test"],["rf_predictions =", "Predict the test digits and display detailed errors"]],
   "code-digits-load":[["import numpy", "Import the libraries"],["keras.utils", "Set the random seed"],["digits =", "Load images and targets, and scale pixels"],["print(\"X shape", "Inspect the shapes and classes"]],
   "code-digits-inspect":[["fig, axes", "Create the image grid"],["for i,", "Draw each image with its label"],["class_counts =", "Count the examples in each class"]],
   "code-digits-split":[["X_train_full,", "Reserve the final test set"],["X_train, X_val", "Split development rows into train and validation"],["print(\"Train", "Check the number of rows in each set"]],
