@@ -17,7 +17,7 @@ from collections import Counter
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import ProxyHandler, Request, build_opener, urlopen
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "lab_data"
@@ -45,16 +45,25 @@ def _request(route, payload=None, timeout=180):
     request = Request(endpoint + route, headers=headers,
                       data=None if payload is None else json.dumps(payload).encode())
     try:
-        with urlopen(request, timeout=timeout) as response:
+        transport = (build_opener(ProxyHandler({})).open
+                     if urlparse(endpoint).hostname in {"localhost", "127.0.0.1", "::1"} else urlopen)
+        with transport(request, timeout=timeout) as response:
             return json.load(response)
     except HTTPError as error:
         detail = error.read(1200).decode(errors="replace")
-        raise RuntimeError(f"Model service returned HTTP {error.code}: {detail}") from error
+        hint = ("Ask the lecturer about access permissions and LLM_LAB_TOKEN."
+                if error.code in {401, 403} else
+                "Rerun Prepare the model service. Check the selected model name."
+                if error.code == 404 else
+                "Check the service output. A busy server or insufficient memory can prevent a request.")
+        raise RuntimeError(f"Model service returned HTTP {error.code}. {hint}\n{detail}") from None
     except (URLError, TimeoutError, OSError) as error:
         raise RuntimeError(
-            "Model service unavailable. Start Ollama and pull the models in README, "
-            "or set OLLAMA_HOST to the lecturer's endpoint. Offline activities still work."
-        ) from error
+            "Cannot reach the model service, or the request timed out. Rerun the notebook's "
+            "Prepare the model service cell and wait for READY. Local mode needs Ollama installed; "
+            "class mode needs the lecturer's reachable URL. If READY was already shown, wait for a busy "
+            "server or try a shorter request. Offline activities still work. See README.md."
+        ) from None
 
 
 def backend_status():
