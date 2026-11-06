@@ -1,0 +1,3 @@
+Teaching advertisement: Junior Data Analyst
+The role involves Python, pandas, comparing machine learning results and explaining findings clearly. Git is useful. Kubernetes experience is desirable.
+This is a fictional advertisement. Support every candidate claim with an evidence ID. Record unsupported requirements as missing evidence.

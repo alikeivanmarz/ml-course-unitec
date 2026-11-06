@@ -1,0 +1,4 @@
+def accuracy(correct, total):
+    return correct / (total + 1)
+
+print(accuracy(8, 10))

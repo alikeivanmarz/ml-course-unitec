@@ -1,0 +1,105 @@
+{
+  "notice": "Actual development examples, not held-out model benchmarks. Model outputs still need source and task review.",
+  "runtime": "Transformers CPU in an existing verification environment; not an Ollama performance test.",
+  "date": "2026-11-06",
+  "text_model": "Qwen/Qwen3-1.7B",
+  "text_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "vision_model": "Qwen/Qwen3-VL-2B-Instruct",
+  "vision_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+  "classification_explanation": {
+    "kind": "text",
+    "prompt": [
+      {
+        "role": "system",
+        "content": "Use three short sentences."
+      },
+      {
+        "role": "user",
+        "content": "Explain classification to a beginner using a clothing example."
+      }
+    ],
+    "text": "Classification is like sorting clothes into groups based on their type. For example, shirts can be classified as T-shirts, dresses, or sweaters. Pants are usually divided into jeans, shorts, or skirts. Colors are another way to classify clothes—like red, blue, or green."
+  },
+  "invoice_extraction": {
+    "kind": "vision",
+    "prompt": [
+      {
+        "role": "system",
+        "content": "Answer clearly and distinguish evidence from guesses."
+      },
+      {
+        "role": "user",
+        "content": "Read the synthetic invoice. Extract the printed fields exactly.\nReturn only JSON matching this schema:\n{\"type\": \"object\", \"properties\": {\"document_id\": {\"type\": \"string\"}, \"currency\": {\"type\": \"string\"}, \"items\": {\"type\": \"array\", \"items\": {\"type\": \"object\", \"properties\": {\"name\": {\"type\": \"string\"}, \"quantity\": {\"type\": \"number\"}, \"unit_price\": {\"type\": \"number\"}}, \"required\": [\"name\", \"quantity\", \"unit_price\"], \"additionalProperties\": false}}, \"subtotal\": {\"type\": \"number\"}, \"gst\": {\"type\": \"number\"}, \"total\": {\"type\": \"number\"}}, \"required\": [\"document_id\", \"currency\", \"items\", \"subtotal\", \"gst\", \"total\"], \"additionalProperties\": false}"
+      }
+    ],
+    "text": "```json\n{\n  \"document_id\": \"INV-042\",\n  \"currency\": \"NZD\",\n  \"items\": [\n    {\n      \"name\": \"Notebook\",\n      \"quantity\": 2,\n      \"unit_price\": 12.50\n    },\n    {\n      \"name\": \"Pen\",\n      \"quantity\": 3,\n      \"unit_price\": 2.00\n    }\n  ],\n  \"subtotal\": 31.00,\n  \"gst\": 4.65,\n  \"total\": 35.65\n}\n```",
+    "parsed": {
+      "document_id": "INV-042",
+      "currency": "NZD",
+      "items": [
+        {
+          "name": "Notebook",
+          "quantity": 2,
+          "unit_price": 12.5
+        },
+        {
+          "name": "Pen",
+          "quantity": 3,
+          "unit_price": 2.0
+        }
+      ],
+      "subtotal": 31.0,
+      "gst": 4.65,
+      "total": 35.65
+    }
+  },
+  "drawing_extraction": {
+    "kind": "vision",
+    "prompt": [
+      {
+        "role": "system",
+        "content": "Answer clearly and distinguish evidence from guesses."
+      },
+      {
+        "role": "user",
+        "content": "Read the printed wall W17 height in A and B.\nReturn only JSON matching this schema:\n{\"type\": \"object\", \"properties\": {\"height_A_mm\": {\"type\": \"number\"}, \"height_B_mm\": {\"type\": \"number\"}}, \"required\": [\"height_A_mm\", \"height_B_mm\"], \"additionalProperties\": false}"
+      }
+    ],
+    "text": "```json\n{\n  \"height_A_mm\": 2850,\n  \"height_B_mm\": 3000\n}\n```",
+    "parsed": {
+      "height_A_mm": 2850,
+      "height_B_mm": 3000
+    }
+  },
+  "invoice_agent_scope_error": {
+    "kind": "text",
+    "prompt": [
+      {
+        "role": "system",
+        "content": "Use the supplied tools to gather evidence before answering. Do not invent tool results. Respect split identities. For code, test the proposed function. A missing source or failed tool must be reported."
+      },
+      {
+        "role": "user",
+        "content": "Check the arithmetic of the supplied invoice reference."
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "function": {
+              "name": "check_invoice",
+              "arguments": {}
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_name": "check_invoice",
+        "content": "{\"calculated_subtotal\": 31.0, \"calculated_total\": 35.65, \"subtotal_agrees\": true, \"total_agrees\": true, \"scope\": \"Arithmetic agreement only. Compare extracted fields with the source image separately.\"}"
+      }
+    ],
+    "text": "The arithmetic check for the invoice reference has been completed. Here are the results:\n\n- **Calculated Subtotal**: $31.00  \n- **Calculated Total**: $35.65  \n- **Subtotal Agrees**: Yes  \n- **Total Agrees**: Yes  \n\nThe calculated values match the source image, indicating that the arithmetic is correct."
+  }
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="850" viewBox="0 0 1200 850" role="img" aria-label="Synthetic teaching invoice INV-042 with total NZD 35.65">
+<rect width="1200" height="850" fill="#f3f5f0"/><rect x="90" y="40" width="1020" height="770" rx="12" fill="white" stroke="#d9ded8"/>
+<g font-family="Arial,sans-serif" fill="#17221c"><text x="150" y="125" font-size="42" font-weight="700">TEACHING INVOICE</text><text x="150" y="175" font-size="25" fill="#4f5d55">Synthetic classroom document</text>
+<text x="150" y="250" font-size="30">Document: INV-042</text><text x="775" y="250" font-size="30">Currency: NZD</text>
+<rect x="140" y="300" width="920" height="65" fill="#edf4ea"/><text x="160" y="343" font-size="28" font-weight="700">Item</text><text x="530" y="343" font-size="28">Quantity</text><text x="735" y="343" font-size="28">Unit price</text><text x="935" y="343" font-size="28">Amount</text>
+<text x="160" y="420" font-size="30">Notebook</text><text x="570" y="420" font-size="30">2</text><text x="775" y="420" font-size="30">12.50</text><text x="950" y="420" font-size="30">25.00</text>
+<path d="M150 450H1050" stroke="#d9ded8"/><text x="160" y="500" font-size="30">Pen</text><text x="570" y="500" font-size="30">3</text><text x="775" y="500" font-size="30">2.00</text><text x="950" y="500" font-size="30">6.00</text>
+<path d="M150 545H1050" stroke="#d9ded8"/><text x="710" y="595" font-size="28">Subtotal</text><text x="950" y="595" font-size="28">31.00</text><text x="710" y="645" font-size="28">GST</text><text x="950" y="645" font-size="28">4.65</text>
+<rect x="685" y="675" width="365" height="65" fill="#17623b"/><text x="710" y="720" font-size="32" fill="white">TOTAL</text><text x="940" y="720" font-size="32" fill="white">35.65</text></g></svg>

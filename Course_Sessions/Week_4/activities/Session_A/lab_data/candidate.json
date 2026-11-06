@@ -1,0 +1,10 @@
+{
+  "name":"Alex Example",
+  "notice":"Fictional candidate for the classroom activity.",
+  "records":[
+    {"id":"E01","skill":"Python","evidence":"Built a pandas workflow that cleaned a public transport CSV and produced a checked summary table."},
+    {"id":"E02","skill":"Machine learning","evidence":"Compared logistic regression and Random Forest using the same stratified split; reported accuracy and per-class recall."},
+    {"id":"E03","skill":"Communication","evidence":"Presented the project results and explained two model errors using examples."},
+    {"id":"E04","skill":"Git","evidence":"Used a local course repository and saved notebook revisions with Git."}
+  ]
+}

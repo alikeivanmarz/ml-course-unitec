@@ -1,0 +1,1 @@
+{"notice":"Synthetic teaching invoice, not a business record.","document_id":"INV-042","currency":"NZD","items":[{"name":"Notebook","quantity":2,"unit_price":12.5},{"name":"Pen","quantity":3,"unit_price":2.0}],"subtotal":31.0,"gst":4.65,"total":35.65}

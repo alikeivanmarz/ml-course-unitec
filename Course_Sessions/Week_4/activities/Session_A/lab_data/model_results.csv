@@ -1,0 +1,5 @@
+model,split,accuracy,recall_positive,correct,total
+Logistic Regression,test_A,0.85,0.70,85,100
+Random Forest,test_A,0.90,0.80,90,100
+Dense Network,test_A,0.92,0.85,92,100
+Unfair comparison,test_B,0.96,0.90,96,100

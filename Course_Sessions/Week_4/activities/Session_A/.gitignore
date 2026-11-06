@@ -1,0 +1,7 @@
+# These teaching inputs are required by the notebook. The repository's broad
+# JSON ignore rule must not omit them when the Week 4 materials are shared.
+!lab_data/course_sources.json
+!lab_data/candidate.json
+!lab_data/research_extracts.json
+!lab_data/invoice_reference.json
+!lab_data/recorded_examples.json
