@@ -39,7 +39,7 @@ def _request(route, payload=None, timeout=180):
     endpoint = os.environ.get("OLLAMA_HOST", BASE_URL).rstrip("/")
     if urlparse(endpoint).scheme not in {"http", "https"}:
         raise ValueError("OLLAMA_HOST must be an HTTP or HTTPS endpoint.")
-    headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json", "User-Agent": "Week4-Class-Lab/1.0"}
     if os.environ.get("LLM_LAB_TOKEN"):
         headers["Authorization"] = "Bearer " + os.environ["LLM_LAB_TOKEN"]
     request = Request(endpoint + route, headers=headers,
@@ -51,8 +51,10 @@ def _request(route, payload=None, timeout=180):
             return json.load(response)
     except HTTPError as error:
         detail = error.read(1200).decode(errors="replace")
-        hint = ("Ask the lecturer about access permissions and LLM_LAB_TOKEN."
+        hint = ("Rerun Prepare the model service and type the class token from the lecturer's screen."
                 if error.code in {401, 403} else
+                "The class server is not running. It runs only during class; outside class use local mode."
+                if error.code in {502, 503, 530} else
                 "Rerun Prepare the model service. Check the selected model name."
                 if error.code == 404 else
                 "Check the service output. A busy server or insufficient memory can prevent a request.")
@@ -92,7 +94,9 @@ def chat(prompt, system="Answer clearly and distinguish evidence from guesses.",
         payload["tools"] = tools
     started = time.perf_counter()
     raw = _request("/api/chat", payload)
-    if raw.get("error") or not raw.get("done", False) or "message" not in raw:
+    if raw.get("error"):
+        raise RuntimeError("The model service reported: " + str(raw["error"])[:300])
+    if not raw.get("done", False) or "message" not in raw:
         raise RuntimeError("The model request did not return a completed message.")
     message = raw["message"]
     content = message.get("content", "")

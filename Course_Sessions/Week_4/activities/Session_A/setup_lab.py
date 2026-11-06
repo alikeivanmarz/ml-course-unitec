@@ -17,6 +17,12 @@ from urllib.request import ProxyHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parent
 INSTALL_URL = "https://ollama.com/download"
+CLASS_SERVER_URL = "https://ml-class.roadinsite.co.nz"
+# Class server token for this semester. The lecturer updates both lines each semester.
+CLASS_TOKEN = "js4m-gnvv-4fes"
+CLASS_TOKEN_EXPIRES = "2026-11-08"
+CLIENT_NAME = "Week4-Class-Lab/1.0"
+_BUILT_IN_TOKEN_REFUSED = False
 _SERVER_PROCESS = None
 
 
@@ -29,7 +35,7 @@ def _opener(endpoint):
 
 
 def _request(endpoint, route, payload=None, timeout=5):
-    headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json", "User-Agent": CLIENT_NAME}
     if os.environ.get("LLM_LAB_TOKEN"):
         headers["Authorization"] = "Bearer " + os.environ["LLM_LAB_TOKEN"]
     return _opener(endpoint).open(Request(endpoint + route, headers=headers,
@@ -154,11 +160,41 @@ def _installation_help():
     return _stop("installation", message)
 
 
+def _ask_class_token():
+    """Use the built-in class token; ask for one only if the server refused it."""
+    if os.environ.get("LLM_LAB_TOKEN"):
+        return
+    if not _BUILT_IN_TOKEN_REFUSED and CLASS_TOKEN:
+        os.environ["LLM_LAB_TOKEN"] = CLASS_TOKEN
+        return
+    try:
+        from IPython import get_ipython
+        if get_ipython() is None:
+            return
+    except ImportError:
+        return
+    try:
+        token = input("Class token from the lecturer's screen (for example abcd-1234-wxyz): ")
+    except (EOFError, KeyboardInterrupt):
+        return
+    token = "".join(token.split()).lower()
+    if token:
+        os.environ["LLM_LAB_TOKEN"] = token
+
+
+def _server_message(error):
+    try:
+        return json.loads(error.read(1000).decode(errors="replace")).get("error", "")
+    except (ValueError, AttributeError, OSError):
+        return ""
+
+
 def prepare_lab(service="local", class_url="", download_missing=False):
     """Return a clear readiness result; expected setup problems do not show a traceback.
 
-    service='local' uses this laptop. service='class' requires a real URL from
-    the lecturer and never starts a service or downloads weights remotely.
+    service='local' uses this laptop. service='class' uses the lecturer's class
+    server (CLASS_SERVER_URL), asks for the class token in a notebook, and never
+    starts a service or downloads weights remotely.
     """
     import llm_lab
     if service not in {"local", "class"}:
@@ -176,6 +212,8 @@ def prepare_lab(service="local", class_url="", download_missing=False):
         return _stop("configuration", "localhost means this laptop. Ask for the lecturer's reachable server URL, "
                      "or choose local mode for this laptop.")
     os.environ["OLLAMA_HOST"] = endpoint
+    if service == "class":
+        _ask_class_token()
     required = list(dict.fromkeys([llm_lab.TEXT_MODEL, llm_lab.VISION_MODEL, llm_lab.EMBED_MODEL]))
     print("Python:", platform.python_version(), "| System:", platform.system())
     print("Mode:", service, "| Required models:", ", ".join(required))
@@ -187,8 +225,9 @@ def prepare_lab(service="local", class_url="", download_missing=False):
             raise
         except (URLError, OSError):
             if service == "class":
-                return _stop("connection", "The class server cannot be reached. Check the URL and campus network/VPN "
-                             "with the lecturer. Do not install or start a server for class mode.")
+                return _stop("connection", "The class server cannot be reached. Check your internet connection and "
+                             "that CLASS_URL is " + CLASS_SERVER_URL + ". The server runs only during class; "
+                             "outside class use SERVICE = \"local\".")
             command = _find_ollama()
             if not command:
                 return _installation_help()
@@ -224,8 +263,22 @@ def prepare_lab(service="local", class_url="", download_missing=False):
                 "available": available, "required": required, "version": version}
     except HTTPError as error:
         if error.code in {401, 403}:
+            detail = _server_message(error)
+            if service == "class":
+                global _BUILT_IN_TOKEN_REFUSED
+                built_in = os.environ.pop("LLM_LAB_TOKEN", None) == CLASS_TOKEN
+                if built_in:
+                    _BUILT_IN_TOKEN_REFUSED = True
+                    return _stop("authentication", (detail or "The class server refused the built-in token.")
+                                 + " Pull the latest course files (git pull origin main), restart the kernel and "
+                                 "run from the top. Or rerun this cell and type the token on the lecturer's screen.")
+                return _stop("authentication", (detail or "The class server refused the token.")
+                             + " Rerun this cell and type the token exactly as shown on the lecturer's screen.")
             return _stop("authentication", "The service refused access. Ask the lecturer about endpoint permissions "
                          "and LLM_LAB_TOKEN. Do not put a token in submitted notebook cells.")
+        if service == "class" and error.code in {502, 503, 504, 530}:
+            return _stop("connection", "The class server is not running right now. It runs only during class. "
+                         "Tell the lecturer, or outside class use SERVICE = \"local\".")
         return _stop("service", f"The service returned HTTP {error.code}. Check the URL or update Ollama. "
                      "If this happened during a download, check internet access and free storage, then rerun setup.")
     except (URLError, OSError, ValueError, RuntimeError) as error:

@@ -9,7 +9,7 @@ The activities cover language-model requests, structured extraction, course RAG,
 ## Files
 
 - `llm_lab.py`: supplied helpers and small tools. Core code uses Python's standard library, with no PyTorch import or automatic download.
-- `setup_lab.py`: preparation checks, local service startup and explicitly permitted missing-model downloads. Importing it changes nothing.
+- `setup_lab.py`: preparation checks for the class server (built-in address and semester token) or the local service, local service startup and explicitly permitted missing-model downloads. Importing it changes nothing.
 - `lab_data/`: course paraphrases, synthetic model results, a fictional candidate and advertisement, source-linked research summaries, an arithmetic practice function and original teaching SVG/PNG documents.
 - `lab_data/recorded_examples.json`: four original model responses from a CPU verification run, including a faulty clothing explanation, checked invoice and drawing extractions, and an agent claim that exceeded its evidence. These are examples to inspect, not benchmark scores.
 - `Week_4_A_Class_Activities.ipynb`: 24 authored code cells, with instructions, comment options and outcome checks.
@@ -18,56 +18,58 @@ Notebook display uses IPython. Two cells use pandas for tables, already listed i
 
 ## Model setup
 
-Live model cells need a running local model service or an endpoint supplied by the lecturer. The presentation, TF-IDF retrieval, CSV comparison, arithmetic checks, evidence checks and small code checker work without model inference.
+Live model cells need a model service. **In class, use the class server: nothing to install.** Outside class, use Ollama on your own laptop. The presentation, TF-IDF retrieval, CSV comparison, arithmetic checks, evidence checks and small code checker work without model inference.
 
-### Before class: install once
+### In class: use the class server (no installation)
 
-1. Open the official [Windows download page](https://ollama.com/download/windows) or [Mac download page](https://ollama.com/download/mac), then choose **Download manually** for the application installer. Installing it does not require changing the `mlcourse` conda environment.
-2. **Windows:** run the official installer, then open Ollama from Start. Check the [Windows requirements](https://docs.ollama.com/windows) if installation is blocked.
-3. **Mac:** open the downloaded disk image, drag Ollama into Applications, then open it. Check the [Mac requirements](https://docs.ollama.com/macos), including the supported macOS version.
-4. Return to VS Code or Jupyter and select the Python kernel for your `mlcourse` environment. Open the notebook from this activity folder. After pulling updated helper files, restart the kernel and run from the top so it loads the new code.
+| What | Value |
+|---|---|
+| Class server address | [https://ml-class.roadinsite.co.nz](https://ml-class.roadinsite.co.nz) (built into the notebook) |
+| Class token | Built into `setup_lab.py` for this semester. Nothing to type. |
+| When it runs | During class only |
 
-Use a current Ollama release; Qwen3-VL requires at least 0.12.7. The official platform guides above give current installation requirements. You do not need terminal commands for the normal notebook setup path.
-
-Use local models for these activities. A paid API key or cloud-model subscription is not required for the local setup.
-
-### In the notebook: prepare, then continue
-
-Run **Open the Week 4 activity folder**, followed by **Prepare the model service**. The preparation cell is:
+1. Select the Python kernel for your `mlcourse` environment and open the notebook from this folder. After pulling updated helper files, restart the kernel and run from the top.
+2. Run **Open the Week 4 activity folder**.
+3. Run **Prepare the model service**. It is already set to the class server:
 
 ```python
-from setup_lab import prepare_lab
+from setup_lab import prepare_lab, CLASS_SERVER_URL
 
-SERVICE = "local"
-CLASS_URL = ""
+SERVICE = "class"
+CLASS_URL = CLASS_SERVER_URL
 DOWNLOAD_MISSING_MODELS = True
 
 setup = prepare_lab(SERVICE, CLASS_URL, download_missing=DOWNLOAD_MISSING_MODELS)
 ```
 
-Running this cell with `DOWNLOAD_MISSING_MODELS = True` permits downloads to this laptop. The first setup needs internet, sufficient storage for several GB of models, and time to finish. Run it before class when possible. Set the value to `False` if you only want to check the installation without downloading.
+4. Wait for **READY**, then continue to the first language-model request.
 
-The cell checks for a running service. If needed, it finds the installed application in common Windows and Mac locations and starts its local service. It checks the version and model names, then downloads only missing models. Existing running services and installed models are reused. No installer runs automatically and nothing downloads simply by importing a helper. Model files are stored by Ollama, outside this repository.
+The token is updated each semester through the course repository. If the cell reports that the token was refused, pull the latest course files (`git pull origin main`), restart the kernel and run from the top. If the lecturer shows a token on screen, you can instead rerun the cell and type it when asked. Class mode never installs anything on your laptop and never downloads models to the class server.
+
+You can open [https://ml-class.roadinsite.co.nz](https://ml-class.roadinsite.co.nz) in a browser to check that the server is on. It shows a one-line status message while class is running.
+
+### Outside class: install Ollama once on your laptop
+
+The class server is switched off outside class. To keep working at home, install Ollama and use local mode.
+
+1. Open the official [Windows download page](https://ollama.com/download/windows) or [Mac download page](https://ollama.com/download/mac), then choose **Download manually** for the application installer. Installing it does not require changing the `mlcourse` conda environment.
+2. **Windows:** run the official installer, then open Ollama from Start. Check the [Windows requirements](https://docs.ollama.com/windows) if installation is blocked.
+3. **Mac:** open the downloaded disk image, drag Ollama into Applications, then open it. Check the [Mac requirements](https://docs.ollama.com/macos), including the supported macOS version.
+4. In the preparation cell, change `SERVICE = "class"` to `SERVICE = "local"` and run it. No token is needed.
+
+Use a current Ollama release; Qwen3-VL requires at least 0.12.7. You do not need terminal commands for the normal notebook setup path. A paid API key or cloud-model subscription is not required.
+
+Running the cell in local mode with `DOWNLOAD_MISSING_MODELS = True` permits downloads to this laptop. The first local setup needs internet, sufficient storage for several GB of models, and time to finish. Set the value to `False` if you only want to check the installation without downloading.
+
+In local mode the cell checks for a running service. If needed, it finds the installed application in common Windows and Mac locations and starts its local service. It checks the version and model names, then downloads only missing models. Existing running services and installed models are reused. No installer runs automatically and nothing downloads simply by importing a helper. Model files are stored by Ollama, outside this repository.
+
+### READY and ACTION NEEDED
 
 **READY** means the service responds and the required model names are available. Continue to the first language-model request. It does not guarantee a model's answers will be correct.
 
-**ACTION NEEDED** means stop before live requests. Follow the message, then rerun the same preparation cell. Use Run All only after preparation succeeds. An interrupted download can be resumed by rerunning setup; do not delete your model files or repeatedly reinstall the environment.
+**ACTION NEEDED** means stop before live requests. Follow the message, then rerun the same preparation cell. Use Run All only after preparation succeeds. An interrupted local download can be resumed by rerunning setup; do not delete your model files or repeatedly reinstall the environment.
 
-The three default models have separate roles: `qwen3:1.7b` for text and tools, `qwen3-vl:2b` for images, and `all-minilm` for embeddings. All live requests use the actual service. There is no scripted replacement for an unavailable model.
-
-### If the lecturer supplies a class server
-
-No local Ollama installation or model download is needed for this mode. In the same preparation cell, set `SERVICE = "class"` and put the actual supplied endpoint in `CLASS_URL`. An empty or invented URL will not work. `localhost` always means your own laptop, not the lecturer's machine. Ask which network or VPN the class endpoint requires.
-
-Class mode checks the endpoint and required model names. It never starts a remote service or downloads weights to the lecturer's server. If a model is missing, ask the lecturer. If different model names are supplied, set `LLM_TEXT_MODEL`, `LLM_VISION_MODEL` and `LLM_EMBED_MODEL` before importing `llm_lab`, then restart the kernel and run from the beginning. For a protected class endpoint, keep the token in `LLM_LAB_TOKEN`; never put it in a URL, saved cell or submitted output. Use only the supplied synthetic/public teaching data.
-
-Only if the lecturer supplies an access token, run this before preparation. The prompt hides the token as you type; the token itself is not written into the code:
-
-```python
-import os
-from getpass import getpass
-os.environ["LLM_LAB_TOKEN"] = getpass("Class access token: ")
-```
+The three default models have separate roles: `qwen3:1.7b` for text and tools, `qwen3-vl:2b` for images, and `all-minilm` for embeddings. The class server provides exactly these three. All live requests use the actual service. There is no scripted replacement for an unavailable model.
 
 ## Activity structure
 
@@ -99,13 +101,15 @@ If a proposed correction repeats the bug, or an agent says it will test without 
 |---|---|
 | Ollama is not installed | Use the official installation link above, open the app, then rerun preparation. `pip install ollama` alone does not install the service. |
 | App is installed but the notebook cannot find it | Open the app once. The helper checks common app locations even when the notebook has an old PATH. For a custom install, ask the lecturer or restart VS Code/Jupyter after installation. |
-| Connection refused | Rerun preparation. Local mode needs the local service; class mode needs the supplied server URL and network access. |
-| Missing model or interrupted download | Check free storage and internet access; rerun preparation with local downloads enabled. In class mode, ask the lecturer. |
+| Class server cannot be reached or is not running | The class server runs only during class. Check your internet connection and that `CLASS_URL = CLASS_SERVER_URL`. Outside class, set `SERVICE = "local"`. |
+| Connection refused in local mode | Open the Ollama app, then rerun preparation. |
+| Missing model or interrupted download | Check free storage and internet access; rerun preparation with local downloads enabled. In class mode, tell the lecturer. |
 | Version too old | Update the Ollama application and reopen it. In class mode, ask the lecturer to update the server. |
-| HTTP 401 or 403 | Ask the lecturer about access permissions and token configuration. Do not paste a token into saved code. |
-| First response takes a long time | Model loading and CPU inference can be slow. Wait for the cell to finish; do not queue repeated requests. After a timeout, try a shorter request or ask whether the class server is busy. |
+| Class token refused (HTTP 401) | Pull the latest course files (`git pull origin main`), restart the kernel and run from the top. Or rerun the preparation cell and type the token shown by the lecturer. |
+| Too many requests (HTTP 429) | Many requests arrived from your network at once. Wait a minute, then run the cell once. |
+| First response takes a long time | The whole class shares the class server, so image requests can take up to a minute when everyone runs them together. Wait for the cell to finish; do not press Run repeatedly. In local mode, model loading and CPU inference can be slow. |
 | Wrong Python kernel or missing notebook library | Select the existing `mlcourse` environment and restart the kernel. Do not install packages into an unrelated Python environment. |
-| Installation is blocked or the laptop is unsupported | Ask whether a class endpoint is available. You can still complete the offline tasks below. A class server must actually be supplied; it is not automatically provided by this repository. |
+| Installation is blocked or the laptop is unsupported | Use the class server during class; it needs no installation. Outside class you can still complete the offline tasks below. |
 
 Offline tasks include TF-IDF retrieval, the results CSV comparison, arithmetic checks on the supplied reference, evidence lookups and the bounded bug checker. These do not pretend to be LLM/VLM inference. Tasks which depend on a generated answer need the model service.
 
