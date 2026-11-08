@@ -69,7 +69,7 @@ In local mode the cell checks for a running service. If needed, it finds the ins
 
 **ACTION NEEDED** means stop before live requests. Follow the message, then rerun the same preparation cell. Use Run All only after preparation succeeds. An interrupted local download can be resumed by rerunning setup; do not delete your model files or repeatedly reinstall the environment.
 
-The three default models have separate roles: `qwen3:1.7b` for text and tools, `qwen3-vl:2b` for images, and `all-minilm` for embeddings. The class server provides exactly these three. All live requests use the actual service. There is no scripted replacement for an unavailable model.
+The three default models have separate roles: `qwen3:1.7b` for text and tools, `qwen3-vl:2b-instruct` for images, and `all-minilm` for embeddings. The class server provides these models. The instruct build of Qwen3-VL answers directly; the default `qwen3-vl:2b` build can spend its whole output budget on hidden reasoning and return an empty answer. All live requests use the actual service. There is no scripted replacement for an unavailable model.
 
 ## Activity structure
 

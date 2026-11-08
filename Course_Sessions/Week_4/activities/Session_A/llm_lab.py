@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "lab_data"
 BASE_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 TEXT_MODEL = os.environ.get("LLM_TEXT_MODEL", "qwen3:1.7b")
-VISION_MODEL = os.environ.get("LLM_VISION_MODEL", "qwen3-vl:2b")
+VISION_MODEL = os.environ.get("LLM_VISION_MODEL", "qwen3-vl:2b-instruct")
 EMBED_MODEL = os.environ.get("LLM_EMBED_MODEL", "all-minilm")
 
 
